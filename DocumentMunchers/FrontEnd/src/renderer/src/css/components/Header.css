@@ -1,0 +1,30 @@
+/* Header component styles (moved to css/components) */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 28px}
+.top-left{display:flex;align-items:center;gap:var(--gap)}
+.logo{display:flex;align-items:center;gap:var(--gap)}
+.brand-img{height:56px;display:block;max-width:420px}
+.logo-area{display:flex;align-items:center}
+.top-right{display:flex;gap:var(--gap)}
+
+@media (max-width:560px){
+  .topbar{padding:12px 14px;flex-wrap:wrap;row-gap:12px}
+  .top-left{gap:8px}
+  .brand-img{height:44px}
+  .top-right{gap:8px}
+  .icon-btn{width:40px;height:40px}
+
+  /* Hide filter/grid icons to reduce clutter; keep menu visible */
+  .top-right > .icon-btn:nth-child(1),
+  .top-right > .icon-btn:nth-child(2) {display:none}
+
+  /* Center the logo when header wraps */
+  .logo-area{flex:1;display:flex;justify-content:center}
+
+  .search-box{width:96%;padding:14px}
+  .search-text{font-size:16px}
+}
+
+@media (max-width:360px){
+  .brand-img{height:36px}
+  .search-text{font-size:14px}
+}

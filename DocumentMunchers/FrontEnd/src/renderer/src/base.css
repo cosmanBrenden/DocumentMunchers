@@ -1,0 +1,47 @@
+/* Base CSS: variables, layout, and generic helpers */
+:root{
+  --bg: #fafafa;
+  --panel: #e9f7ec;
+  --panel-2: #eaeaea;
+  --accent: #2e7d32;
+  --accent-2: #547d5a;
+  --side-bg: #79b987;
+  --muted: #6f8f7b;
+  --text: #072b18;
+  --gap: 12px;
+  --radius: 12px;
+  --pill-radius: 999px;
+  --shadow-soft: 0 6px 18px rgba(46,125,50,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+html, body, #root{
+  height:100%;
+  margin:0;
+  background:var(--bg);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:var(--text);
+}
+
+.app-root{display:flex;flex-direction:column;height:100%}
+
+/* Search / main area */
+.main-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding-top:68px}
+.search-row{width:100%;display:flex;justify-content:center}
+.search-box{
+  width:75%;max-width:920px;background:var(--panel);border-radius:28px;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 14px 28px rgba(0,0,0,0.06)
+}
+.search-text{color:var(--muted);font-size:18px}
+.search-input{flex:1;border:none;background:transparent;padding:8px 12px;font-size:18px;color:var(--text);outline:none}
+.search-input::placeholder{color:var(--muted)}
+.search-action{width:40px;height:40px;border-radius:var(--pill-radius);border:none;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* Generic modal backdrop used by multiple components */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;z-index:80}
+
+/* Responsive helpers */
+@media (max-width:800px){.search-box{width:92%}}
+
+/* Utility classes */
+.hidden{display:none}
+.center{display:flex;align-items:center;justify-content:center}
