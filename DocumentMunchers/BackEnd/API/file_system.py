@@ -155,6 +155,8 @@ def dump_workspaces(wss):
         json.dump(wss, f, indent=4)
 
 def pickle_tfidf(output_fp, obj):
+    if(not os.path.exists(TFIDF_DIR)):
+        os.mkdir(TFIDF_DIR)
     with open(f"{TFIDF_DIR}{output_fp}", "wb") as f:
         pickle.dump(obj, f)
 
