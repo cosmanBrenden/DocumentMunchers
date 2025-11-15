@@ -40,8 +40,9 @@ class TFIDF:
 
         # Extract all valid feature names based on above parts of speech
         valid_words = []
+        invalid_words = ['cid']
         for word in self.feature_names:
-            if(checker.is_valid_pos(word)):
+            if(checker.is_valid_pos(word) and word not in invalid_words):
                 valid_words.append(word)
         # Get the tfidf of all valid words
         tfidfs = []
