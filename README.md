@@ -1,5 +1,5 @@
 # Document Munchers
-> 📢__Latest Update__:
+> 📢*Latest Update:*
 > 1. Added a semantic search feature.
 > 2. Now, AI provides 4 keywords so that the user can understand the context of the file without opening the file.
 > 3. In the search result page, users are now allowed to change the display format between list form and grid form.
@@ -48,4 +48,4 @@ Document Munchers is a 100% locally running AI tool that helps you find the exac
 
 
 
-> ❗___Note:___ The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholders results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
+> ❗*Note:* The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholders results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
