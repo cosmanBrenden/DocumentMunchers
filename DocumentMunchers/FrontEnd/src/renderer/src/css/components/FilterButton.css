@@ -1,0 +1,13 @@
+/* Advanced Search modal styles (moved to css/components) */
+.modal{width:440px;max-width:92vw;background:var(--panel-2);border-radius:14px;padding:26px 28px;box-shadow:var(--shadow-lg);position:relative}
+.modal-title{font-size:28px;margin:0 0 18px 0}
+.modal-close{position:absolute;right:12px;top:12px;border:none;background:transparent;font-size:22px;cursor:pointer}
+.modal-section{margin-top:12px}
+.section-label{display:block;margin-bottom:10px;font-weight:600}
+.date-row{display:flex;align-items:center;gap:14px}
+.date-input{height:36px;padding:6px 12px;border-radius:18px;border:1px solid var(--accent);outline:none}
+.date-sep{font-size:20px;color:var(--accent)}
+.filetypes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.filetypes-grid .ft{display:flex;align-items:center;gap:8px}
+.apply-btn{background:#9ccaa0;border:1px solid var(--accent);padding:10px 20px;border-radius:8px;cursor:pointer}
+@media (max-width:680px){.modal{width:92vw;padding:18px}.modal-title{font-size:20px}}

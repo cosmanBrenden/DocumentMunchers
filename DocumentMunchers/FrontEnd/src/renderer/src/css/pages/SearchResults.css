@@ -1,0 +1,19 @@
+.results-root{padding:0px 56px}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.results-query{font-size:20px;color:var(--muted)}
+.results-count{color:var(--muted)}
+
+.results-list{display:flex;flex-direction:column;gap:18px}
+
+/* Make list view content match the centered width used by the grid view */
+.results-list{width:100%;max-width:1200px;margin:0 auto}
+.results-list .result-card{width:100%}
+
+/* Grid view: responsive card grid */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,360px));justify-content:center;gap:28px;align-items:start;max-width:1200px;margin:0 auto}
+.results-grid .result-card{width:100%}
+.results-grid .result-card .result-left{padding-right:10px}
+
+@media (max-width:900px){
+  .results-root{padding:8px 16px}
+}

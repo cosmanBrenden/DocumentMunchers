@@ -1,0 +1,64 @@
+# Node
+node_modules/
+
+# Vite / build outputs
+dist/
+.build/
+.vite/
+public/build/
+
+# Electron
+electron/node_modules/
+electron/build/
+electron/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Env files
+.env
+.env.*
+.env.local
+
+# OS files
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache, coverage
+.cache/
+coverage/
+
+# Lockfiles (optional: keep if you want to track them)
+# package-lock.json
+# yarn.lock
+
+# Misc
+*.tgz
+*.zip
+*.local
+
+# Git
+/.pnp
+.pnp.js
+
+# Temporary
+*.tmp
+
+# Yarn Berry
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Local Vite preview artifacts
+.preview

@@ -1,0 +1,3 @@
+/* Icon button styles (moved to css/components) */
+.icon-btn{width:48px;height:48px;border-radius:var(--pill-radius);border:none;background: #eaf8ed;display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--shadow-soft);cursor:pointer}
+.icon-btn:hover{filter:brightness(0.98)}
