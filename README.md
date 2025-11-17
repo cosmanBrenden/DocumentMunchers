@@ -39,7 +39,7 @@ Document Munchers is a 100% locally running AI tool that helps you find the exac
     * Linux:  ```./setup.sh```
     * Windows:  ```./setup.bat```
 
-* Next, run the one of the following scripts to start the program:
+* Next, run one of the following scripts to start the program:
     * macOS:  ```./run.zsh```
     * Linux:  ```./run.sh```
     * Windows:  ```./run.bat```
@@ -48,4 +48,4 @@ Document Munchers is a 100% locally running AI tool that helps you find the exac
 
 
 
-> ❗*Note:* The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholders results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
+> ❗*Note:* The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholder results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
