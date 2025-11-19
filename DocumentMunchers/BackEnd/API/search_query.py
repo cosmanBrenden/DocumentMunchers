@@ -7,7 +7,8 @@ Correct input format
     "query":query_str,
     "action":"open"
 }
-{"type":"search_query", "content":{"action":"search", "query":"key words"}}
+Example input from the FrontEnd
+{"type":"search_query", "content":{"action":"search", "query":"Show me some documents about the inuit"}}
 """
 
 def __make_search(content:dict, db:Database):
