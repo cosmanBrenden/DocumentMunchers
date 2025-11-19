@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 
 import file_system
@@ -105,29 +106,42 @@ class Database:
     @param ws_id The id of the workspace to index
     """
     def preprocess(self, ws_id):
+        # Raise an exception if the workspace doesn't exist
         if(not ws_id in self.workspaces.keys()):
-            raise Exception(f"Workspace '{ws_id}' does not exist!")
+            raise Exception(f"Workspace '{ws_id}' does not exist, cannot preprocess it!")
+        # Update subscribers about the preprocessing begining
         self.__notify_subscribers(f"Starting preprocessing of '{ws_id}'")
+        # Get the workspace out
         curr_ws = self.workspaces[ws_id]
+        # Iterate through all files
         for fp in curr_ws["files"].keys():
+            # Update subscribers about what file is being processed
             self.__notify_subscribers(f"Processing {fp}...")
+            # Get the file out
             file = curr_ws["files"][fp]
+            # If there is a summary and there shouldn't be, remove it
             if(not file["ai"] and file["summary"] != None):
                 file["summary"] = None
+            # Copy the last modified date
             saved_date = file["date_modified"]
+            # If the last modified date we have saved is different from the actual date in the os, reprocess
             if(file_system.is_inconsistent_date(fp, saved_date)):
+                # Get the real date
                 file["date_modified"] = file_system.get_date(fp)
+                # Read the file content in
                 file_content = file_system.read_file_content(fp)
-                
+                # If there should be summarization, summarize the file
                 if(file["ai"] and self.summarizer != None):
                     
                     file["summary"] = self.summarizer.summarize(file_content)
                 else:
                     
                     file["summary"] = None
+                # Fit a tfidf table
                 file["tfidf"] = TFIDF(document=file_content)
-                
+            # Notifiy subs that file is done
             self.__notify_subscribers(f"Done processing {fp}...")
+        # Notify subs that the ws is done
         self.__notify_subscribers(f"Finished preprocessing of '{ws_id}'")
 
         
@@ -137,6 +151,35 @@ class Database:
     """
     def get_workspace_ids(self):
         return set(self.workspaces.keys())
+    
+    """
+    Returns the name, description, and number of files indexed by a workspace at "ws_id".
+    Used for when all info is not needed
+    @param ws_id The id of the workspace to get the info of
+    @return The above listed info
+    """
+    def get_workspace_info(self, ws_id: str):
+        # Raise an exception if the workspace doesn't exist
+        if(not ws_id in self.workspaces.keys()):
+            raise Exception(f"'{ws_id}' does not exist, cannot get its info!")
+        # Get the workspace out
+        ws = self.workspaces[ws_id]
+        # Return info
+        return {
+            "name": ws["name"],
+            "description":ws["description"],
+            "num_files": len(ws["files"].keys())
+        }
+
+    """
+    Returns the entire workspace at 'ws_id'
+    @param ws_id The id of the workspace desired
+    @return The workspace at 'ws_id'
+    """
+    def get_entire_workspace(self, ws_id:str):
+        if(not ws_id in self.workspaces.keys()):
+            raise Exception(f"'{ws_id}' does not exist, cannot get its info!")
+        return self.workspaces[ws_id]
     
     """
     Selects the current workspace to act upon
@@ -149,6 +192,43 @@ class Database:
         self.__notify_subscribers(f"Selecting '{ws_id}' as the current workspace.")
         self.current_ws_id = ws_id
         self.preprocess(ws_id)
+
+    """
+    Generates a unique workspace id to based off of a workspace name
+    @param workspace_name The name to generate the id based on
+    @return The new workspace id
+    """
+    def generate_ws_id(self, workspace_name:str):
+        # If the name is too short to truncate, init id as raw name
+        if len(workspace_name) < 7:
+            ws_id = workspace_name
+        # If its long enough to truncate, truncate it
+        else:
+            ws_id = workspace_name[:3] + "_" + workspace_name[len(workspace_name) - 3:]
+        
+        # Gets the current day of the month as an int to string
+        day_str = str(datetime.fromtimestamp(round(time.time())).day)
+        # Gets the current month as an int to string
+        month_str = str(datetime.fromtimestamp(round(time.time())).month)
+
+        # Append the month and day to the id
+        ws_id += month_str + day_str
+
+        # If that id already exists, add a suffix
+        if(ws_id in self.workspaces.keys()):
+            ws_id += "-2"
+
+        # If for some reason that didn't work, keep trying suffixes until one works
+        count = 3
+        while(ws_id in self.workspaces.keys()):
+            # Remove suffix
+            ws_id = ws_id[:len(ws_id)-( len(str(count)) + 1)]
+            # Add new suffix
+            ws_id += f"-{count}"
+            # Increment count
+            count += 1
+        
+        return ws_id
         
     
     """
@@ -195,6 +275,20 @@ class Database:
         # Preprocess
         self.preprocess(ws_id)
         self.__notify_subscribers(f"Added workspace '{ws_id}'")
+
+    """
+    Removes the workspace at "ws_id"
+    @param ws_id The id of the workspace to remove
+    """
+    def remove_workspace(self, ws_id: str):
+        # Raise exception if the workspace id is not an existing id
+        if(not ws_id in self.workspaces.keys()):
+            raise Exception(f"'{ws_id}' does not exist, cannot select it!")
+        # Ensure that if the current workspace is the one to remove, deselect it
+        if(self.current_ws_id == ws_id):
+            self.current_ws_id = None
+        # Remove the workspace
+        self.workspaces.pop(ws_id)
 
     """
     Gets a list of search results based on the query, sorted in descending order
