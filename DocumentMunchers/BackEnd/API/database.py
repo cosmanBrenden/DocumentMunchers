@@ -148,7 +148,6 @@ class Database:
             raise Exception(f"Workspace '{ws_id}' does not exist, cannot select it!")
         self.__notify_subscribers(f"Selecting '{ws_id}' as the current workspace.")
         self.current_ws_id = ws_id
-        print("Current workspace id: " + ws_id)
         self.preprocess(ws_id)
         
     
@@ -160,7 +159,6 @@ class Database:
     """
     def add_workspace(self, ws_id:str, filepaths:list[tuple[str,bool]], name:str, description:str):
         self.__notify_subscribers(f"Adding workspace '{ws_id}'")
-        print('adding workspace')
         # Init new workspace
         ws = {
             "files": dict(),
@@ -175,7 +173,6 @@ class Database:
             # If the added workspace exists already, and the filepath was already indexed,
             # copy what info can be copied
             if(ws_id in self.workspaces.keys() and fp in self.workspaces[ws_id]["files"].keys()):
-                print('Updating previous entry')
                 ws["files"].update({fp:{
                     "ai":ai,
                     "summary":self.workspaces[ws_id]["files"][fp]["summary"],
@@ -185,7 +182,6 @@ class Database:
                 }})
             # If there should be a new entry, make it
             else:   
-                print('Making a new entry')
                 ws["files"].update({fp:{
                     "ai":ai,
                     "summary":None,
@@ -199,7 +195,6 @@ class Database:
         # Preprocess
         self.preprocess(ws_id)
         self.__notify_subscribers(f"Added workspace '{ws_id}'")
-        print('Added workspace: ' + ws_id)
 
     """
     Gets a list of search results based on the query, sorted in descending order

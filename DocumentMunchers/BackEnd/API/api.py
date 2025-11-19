@@ -27,7 +27,10 @@ DATABASE = get_database()
 print("Initialized database...")
 status_socket_sub = BasicSubscriber()
 stat_sub_id = "status_socket"
+terminal_sub = BasicSubscriber()
+term_sub_id = "term_sub"
 DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
+DATABASE.add_subscriber(terminal_sub, term_sub_id)
 
 
 # Temporary workaround, set up to prepare for implementation of workspaces
@@ -121,6 +124,9 @@ def handle_data():
             res_msg = f"{str(e)} - {tb}"
         finally:
             status_socket_sub.update(res_msg)
+
+        
+
         
         return jsonify(res)
         
@@ -150,6 +156,8 @@ def kill():
 def status_monitor():
     """Background thread for status monitoring"""
     while True:
+        while(terminal_sub.has_update()):
+            print(terminal_sub.get_oldest_update())
         try:
             stat_msg = status_socket_sub.get_oldest_update()
             STATUS_QUEUE.put(stat_msg)
