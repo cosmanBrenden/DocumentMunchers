@@ -22,7 +22,7 @@ def __make_search(content:dict, db:Database):
 def process(content:dict, db:Database) -> dict:
     if(content["action"] == "search"):
         res = __make_search(content, db)
-        return {"content": res, "msg": "The FrontEnd sent a search query"}
+        return res, ""
     else:
         raise Exception("Invalid Action!")
 

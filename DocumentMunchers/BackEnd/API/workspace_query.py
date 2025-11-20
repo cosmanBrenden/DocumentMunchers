@@ -180,23 +180,24 @@ def __select_workspace(content:dict, database:Database):
     database.select_workspace(content["id"])
 
 def process(content:dict, database:Database):
+    res = None
+    res_msg = ""
     if content["action"] == "list_workspaces":
         workspaces_info = __list_workspaces(content, database)
-        return {"content": workspaces_info, "msg":f"Indexed {len(workspaces_info)} workspaces."}
+        res = workspaces_info
     elif content["action"] == "open_workspace":
         workspace = __open_workspace(content, database)
-        return {"content": workspace, "msg":f"Sent '{content['id']}' to the FrontEnd"}
+        res = workspace
     elif content["action"] == "add_workspace":
         __add_workspace(content, database)
-        return {"msg": f"Added {content['data']['name']}", "content":"Bazinga"}
     elif content["action"] == "remove_workspace":
         __remove_workspace(content, database)
-        return {"msg": f"Removed {content['id']}", "content":"It's Morbin' Time"}
     elif content["action"] == "gen_id":
         ws_id = __gen_id(content, database)
-        return {"msg": f"Generated id {ws_id}", "content":ws_id}
+        res = [ws_id]
     elif content["action"] == "select_workspace":
         __select_workspace(content, database)
-        return {"msg": f"Selected {content['id']}", "content":"It's Morbin' Time"}
     else:
         raise Exception("Invalid Action!")
+    
+    return res, res_msg

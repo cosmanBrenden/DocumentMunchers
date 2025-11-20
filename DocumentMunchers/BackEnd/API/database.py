@@ -43,18 +43,22 @@ class Database:
     @param summarizer The summarizer object to use for file summarization, default=None
     """
     def __init__(self, similarity:Similarity, summarizer:Summarizer=None):
-        self.workspaces = self.__load()
+        self.workspaces, last_selected = self.__load()
         self.current_ws_id = None
         self.summarizer = summarizer
         self.similarity = similarity
         self.subscribers = dict()
         self.last_dump = 0
 
+        # Shouldn't throw an exception
+        if(last_selected != ""):
+            self.select_workspace(last_selected)
+
     """
     Loads the workspaces from a file
     """
     def __load(self) -> dict:
-        wss = file_system.load_workspaces()
+        wss, last_selected = file_system.load_workspaces()
         # Recombine every tfidif vectorizer
         for ws_key in wss.keys():
             files = wss[ws_key]["files"]
@@ -66,7 +70,7 @@ class Database:
                     tfidf = TFIDF(vectorizer_data=tfidf_dat)
                     curr_file["tfidf"] = tfidf
         
-        return wss
+        return wss, last_selected
     """
     Dump the workspaces to a file
     """
@@ -90,7 +94,7 @@ class Database:
             wss[ws_key] = curr_ws
 
         # Take a dump
-        file_system.dump_workspaces(wss)
+        file_system.dump_workspaces(wss, self.current_ws_id)
         self.__notify_subscribers("Dump workspaces.")
         self.last_dump = time.time()
 

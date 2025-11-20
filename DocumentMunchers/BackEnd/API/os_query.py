@@ -28,11 +28,16 @@ def __ask_directory():
     return files
 
 def process(content:dict) -> dict:
+    res = None
+    res_msg = ""
     if(content["action"] == "open"):
         __open_file(content)
-        return {"msg": f"Opened {content['filepath']}", "content":None}
+        res_msg = f"Opened '{content['filepath']}'"
     elif(content["action"] == "ask_directory"):
         files = __ask_directory()
-        return {"msg": "Opened a directory", "content":files}
+        res = files
+        res_msg = f"Asked for directory"
     else:
         raise Exception("Invalid Action!")
+
+    return res, res_msg

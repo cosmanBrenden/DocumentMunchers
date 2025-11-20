@@ -180,26 +180,27 @@ Loads the workspaces into a dictionary
 @return The dictionary of workspaces
 """
 def load_workspaces() -> dict:
+    last_selected = ""
     # If the workspaces file doesn't exist, create it
     if(not os.path.exists(WORKSPACE_FP)):
         wss = dict()
         # Ensure fp exists
         with open(WORKSPACE_FP, "w", encoding="utf-8") as f:
-            json.dump(wss, f, indent=4)
+            json.dump([wss, last_selected], f, indent=4)
     # If the file does exist, load it
     else:
         with open(WORKSPACE_FP, "r", encoding="utf-8") as f:
-            wss = json.load(f)
+            wss, last_selected = json.load(f)
     # Return the loaded contents
-    return wss
+    return wss, last_selected
 
 """
 Dumps the workspaces to the workspaces file
 @param wss The dictionary of workspaces to write to a file
 """
-def dump_workspaces(wss):
+def dump_workspaces(wss, last_selected):
     with open(WORKSPACE_FP, "w", encoding="utf-8") as f:
-        json.dump(wss, f, indent=4)
+        json.dump([wss, last_selected], f, indent=4)
 
 """
 Takes a tfidf table and dumps it to a binary

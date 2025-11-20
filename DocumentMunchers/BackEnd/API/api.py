@@ -94,10 +94,10 @@ def handle_data():
             content = message["content"]
             
             if mtype == "os_query":
-                res_raw = os_query.process(content)
-                res["type"] = "res"
-                res["content"] = res_raw["content"]
-                res_msg = res_raw["msg"]
+                res, res_msg = os_query.process(content)
+                # res["type"] = "res"
+                # res["content"] = res_raw["content"]
+                # res_msg = res_raw["msg"]
 
             elif mtype == "stats_query":
                 raise Exception("Not Implemented Yet!")
@@ -106,16 +106,16 @@ def handle_data():
             elif mtype == "search_history_query":
                 raise Exception("Not Implemented Yet!")
             elif mtype == "workspace_query":
-                res_raw = workspace_query.process(content, DATABASE)
-                res["content"] = res_raw["content"]
-                res_msg = res_raw["msg"]
-                res["type"] = "res"
+                res, res_msg = workspace_query.process(content, DATABASE)
+                # res["content"] = res_raw["content"]
+                # res_msg = res_raw["msg"]
+                # res["type"] = "res"
             elif mtype == "search_query":
                 # results to send back to the front end 
-                res_raw = search_query.process(content, DATABASE)
-                res = res_raw["content"]
-                print(res)
-                res_msg = res_raw["msg"]
+                res, res_msg = search_query.process(content, DATABASE)
+                # res = res_raw["content"]
+                # print(res)
+                # res_msg = res_raw["msg"]
 
             elif mtype == "settings_query":
                 raise Exception("Not Implemented Yet!")
@@ -128,8 +128,11 @@ def handle_data():
             res["content"] = str(e)
             res_msg = f"{str(e)} - {tb}"
         finally:
-            status_socket_sub.update(res_msg)
-            terminal_sub.update(res_msg)
+            if res_msg != "":
+                status_socket_sub.update(res_msg)
+                terminal_sub.update(res_msg)
+            if(not res):
+                res = [res_msg]
 
         
 
