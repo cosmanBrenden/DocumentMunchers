@@ -16,6 +16,7 @@ from subscribers import BasicSubscriber
 
 import os_query
 import search_query
+import workspace_query
 
 app = Flask(__name__)
 CORS(app)
@@ -33,24 +34,23 @@ DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
 DATABASE.add_subscriber(terminal_sub, term_sub_id)
 
 
-# Temporary workaround, set up to prepare for implementation of workspaces
-# Write the directory to read test files from to a text file
-parent_dir = os.path.dirname(os.path.abspath(__file__))
-with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
-    f.writelines([parent_dir + "/test_files/"])
+# # Temporary workaround, set up to prepare for implementation of workspaces
+# # Write the directory to read test files from to a text file
+# parent_dir = os.path.dirname(os.path.abspath(__file__))
+# with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
+#     f.writelines([parent_dir + "/test_files/"])
 
-# Read the test file directory from the text file
-with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
-    d = f.read()
+# # Read the test file directory from the text file
+# with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
+#     d = f.read()
 
-# Get the files from the test file directory 
-files = os.listdir(d)
-files = [(f"{d}{x}", True) for x in files]
+# # Get the files from the test file directory 
+# files = os.listdir(d)
+# files = [(f"{d}{x}", True) for x in files]
 
-DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
-DATABASE.select_workspace("ws1")
-if DATABASE.should_dump():
-    DATABASE.dump_workspaces()
+# DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
+# DATABASE.select_workspace("ws1")
+
 
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
@@ -94,9 +94,10 @@ def handle_data():
             content = message["content"]
             
             if mtype == "os_query":
-                res_msg = os_query.process(content)
+                res_raw = os_query.process(content)
                 res["type"] = "res"
-                res["content"] = res_msg
+                res["content"] = res_raw["content"]
+                res_msg = res_raw["msg"]
 
             elif mtype == "stats_query":
                 raise Exception("Not Implemented Yet!")
@@ -105,12 +106,16 @@ def handle_data():
             elif mtype == "search_history_query":
                 raise Exception("Not Implemented Yet!")
             elif mtype == "workspace_query":
-                raise Exception("Not Implemented Yet!")
-            
+                res_raw = workspace_query.process(content, DATABASE)
+                res["content"] = res_raw["content"]
+                res_msg = res_raw["msg"]
+                res["type"] = "res"
             elif mtype == "search_query":
                 # results to send back to the front end 
-                res = search_query.process(content, DATABASE)
-                res_msg = "Made a search!"
+                res_raw = search_query.process(content, DATABASE)
+                res = res_raw["content"]
+                print(res)
+                res_msg = res_raw["msg"]
 
             elif mtype == "settings_query":
                 raise Exception("Not Implemented Yet!")
@@ -124,6 +129,7 @@ def handle_data():
             res_msg = f"{str(e)} - {tb}"
         finally:
             status_socket_sub.update(res_msg)
+            terminal_sub.update(res_msg)
 
         
 
@@ -153,11 +159,13 @@ def kill():
     os.kill(os.getpid(), signal.SIGINT)
     return jsonify({"success": True, "message": "Server is shutting down..."})
 
-def status_monitor():
-    """Background thread for status monitoring"""
+def state_daemon():
+    """Background thread for state management"""
     while True:
         while(terminal_sub.has_update()):
             print(terminal_sub.get_oldest_update())
+        if DATABASE.should_dump():
+            DATABASE.dump_workspaces()
         try:
             stat_msg = status_socket_sub.get_oldest_update()
             STATUS_QUEUE.put(stat_msg)
@@ -165,9 +173,9 @@ def status_monitor():
             sleep(3)
 
 if __name__ == "__main__":
-    # Start background thread for status monitoring
+    # Start background thread for state management
     print("Starting API main")
-    Thread(target=status_monitor, daemon=True).start()
+    Thread(target=state_daemon, daemon=True).start()
     
     print(f"Starting Flask server on http://localhost:{PORT}")
     print("Endpoints:")

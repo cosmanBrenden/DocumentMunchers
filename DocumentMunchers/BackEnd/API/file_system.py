@@ -14,7 +14,7 @@ from tkinter import filedialog
 
 WORKSPACE_FP = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/workspaces.json"
 TFIDF_DIR = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/TFIDFS/"
-VALID_FILE_TYPES = set(["pdf, docx, txt, json, odt, pptx, xlsx, csv, ods"])
+VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "csv", "ods"])
 
 """
 Private function, mines pdf documents

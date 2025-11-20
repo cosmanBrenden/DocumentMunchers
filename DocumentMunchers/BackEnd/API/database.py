@@ -179,7 +179,20 @@ class Database:
     def get_entire_workspace(self, ws_id:str):
         if(not ws_id in self.workspaces.keys()):
             raise Exception(f"'{ws_id}' does not exist, cannot get its info!")
-        return self.workspaces[ws_id]
+        
+        curr = self.workspaces[ws_id]
+        filepaths = []
+
+        for fp in curr["files"].keys():
+            filepaths.append((fp, curr["files"][fp]["ai"]))
+        
+        return {
+            "name":curr["name"],
+            "description":curr["description"],
+            "filepaths":filepaths,
+            "id":ws_id
+        }
+
     
     """
     Selects the current workspace to act upon
@@ -228,6 +241,8 @@ class Database:
             # Increment count
             count += 1
         
+        self.__notify_subscribers(f"Generated id '{ws_id}'")
+
         return ws_id
         
     
@@ -289,6 +304,8 @@ class Database:
             self.current_ws_id = None
         # Remove the workspace
         self.workspaces.pop(ws_id)
+
+        self.__notify_subscribers(f"Removed workspace '{ws_id}'")
 
     """
     Gets a list of search results based on the query, sorted in descending order

@@ -15,9 +15,24 @@ def __open_file(content:dict):
     filepath = content["filepath"]
     file_system.open_with_default_viewer(filepath)
 
+"""
+Correct input format
+{
+    "action": "ask_directory"
+}
+Example input from the FrontEnd
+{"type":"os_query", "content":{"action":"ask_directory"}}
+"""
+def __ask_directory():
+    files = file_system.ask_user_for_directory()
+    return files
+
 def process(content:dict) -> dict:
     if(content["action"] == "open"):
         __open_file(content)
-        return f"Opened {content['filepath']}"
+        return {"msg": f"Opened {content['filepath']}", "content":None}
+    elif(content["action"] == "ask_directory"):
+        files = __ask_directory()
+        return {"msg": "Opened a directory", "content":files}
     else:
         raise Exception("Invalid Action!")
