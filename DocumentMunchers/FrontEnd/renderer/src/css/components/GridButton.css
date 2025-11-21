@@ -1,0 +1,251 @@
+/* Workspace modal styles (moved to css/components) */
+.workspace-modal{width:420px;max-width:92vw;background:var(--panel);border-radius:18px;padding:18px;box-shadow:var(--shadow-lg)}
+.workspace-header{font-size:44px;text-align:center;padding:6px 0 8px 0;color:var(--accent-2)}
+.workspace-list{max-height:420px;overflow:auto;border-top:1px solid rgba(0,0,0,0.08);border-bottom:1px solid rgba(0,0,0,0.08);margin-top:8px}
+.workspace-item{display:flex;align-items:center;padding:18px;border-bottom:1px solid rgba(0,0,0,0.04)}
+.workspace-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid rgba(0,0,0,0.06);margin-right:16px}
+.workspace-title{font-size:20px;color:#084024}
+.workspace-desc{color:#496d57}
+.current-badge{background:#6aa77d;color:#fff;padding:4px 8px;border-radius:8px;margin-left:8px;font-size:12px}
+.workspace-footer{display:flex;justify-content:center;padding:12px}
+
+
+.new-workspace{
+    background:#d8eed9;
+    border:1px solid var(--accent);
+    padding:8px 18px;
+    border-radius:8px;
+}
+
+.new-workspace:hover{
+    background: #6aa77d;
+}
+
+
+.workspace-actions {
+  position: relative;
+  cursor: pointer;
+  padding-left: 24px;
+}
+
+/* Workspace actions menu */
+.workspace-menu {
+  position: absolute;
+  top: -10px;
+  right: -60px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* Edit workspace button */
+.menu-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.menu-item:hover {
+  background: #f5f5f5;
+}
+
+
+/* Edit Modal Styles */
+.edit-modal {
+  background:var(--panel);
+  border-radius: 8px;
+  padding: 0;
+  width: 500px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:var(--accent-2);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  color: #333;
+  background: #f5f5f5;
+  border-radius: 50%;
+}
+
+.modal-content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.file-paths-section {
+  margin: 0 0 12px 0;
+  color:var(--accent-2);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.add-path {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.add-path input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-path input:focus {
+  outline: none;
+  border-color: #6aa77d;
+}
+
+.add-path button {
+  padding: 8px 16px;
+  background: #6aa77d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-path button:hover {
+  background: #639c75;
+}
+
+.file-paths-list {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.file-path-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.file-path-item:last-child {
+  border-bottom: none;
+}
+
+.path-text {
+  flex: 1;
+  font-family: monospace;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.remove-path {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 2px 6px;
+  margin-left: 8px;
+}
+
+.remove-path:hover {
+  background: #ffebee;
+  border-radius: 50%;
+}
+
+.no-paths {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cancel-button, .save-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-button {
+  background: white;
+  border: 1px solid #ccc;
+}
+
+.cancel-button:hover {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.save-button {
+  padding: 8px 16px;
+  background: #6aa77d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.save-button:hover {
+  background: #639c75;
+}
+
+.workspace-name-input {
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: 1px solid #6aa77d;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #666;
+}
+
+.workspace-name-input:focus {
+  outline: none;
+  border-color: #6aa77d;
+  color: #666;
+}
