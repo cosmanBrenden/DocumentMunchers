@@ -133,9 +133,6 @@ def handle_data():
                 terminal_sub.update(res_msg)
             if(not res):
                 res = [res_msg]
-
-        
-
         
         return jsonify(res)
         
