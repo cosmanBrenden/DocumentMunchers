@@ -4,11 +4,11 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  root: 'src/renderer',
+  root: 'renderer',
   base: './',
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/renderer')
+      '@': resolve(__dirname, 'renderer')
     }
   },
   build: {
