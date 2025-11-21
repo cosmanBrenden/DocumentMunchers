@@ -107,6 +107,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
             <div className="workspace-footer">
               {/* Button to add a new workspace */}
               {/*<button className="new-workspace" onClick={() => handleNewWorkspace(w)}> + New Workspace </button>*/}
+              <button className='new-workspace'> + New Workspace </button>
             </div>
           </div>
         </div>

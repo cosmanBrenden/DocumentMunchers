@@ -12,5 +12,5 @@
     "sourceMap": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*", "electron/**/*"]
+  "include": ["renderer/**/*", "electron/**/*", "vite.config.ts"]
 }
