@@ -51,7 +51,7 @@ class Database:
         self.last_dump = 0
 
         # Shouldn't throw an exception
-        if(last_selected != ""):
+        if(last_selected):
             self.select_workspace(last_selected)
 
     """
