@@ -294,6 +294,7 @@ class Database:
         # Preprocess
         self.preprocess(ws_id)
         self.__notify_subscribers(f"Added workspace '{ws_id}'")
+        self.dump_workspaces()
 
     """
     Removes the workspace at "ws_id"
@@ -310,6 +311,7 @@ class Database:
         self.workspaces.pop(ws_id)
 
         self.__notify_subscribers(f"Removed workspace '{ws_id}'")
+        self.dump_workspaces()
         
 
     """
