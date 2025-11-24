@@ -6,7 +6,7 @@ from flask_cors import CORS, cross_origin
 import os
 from queue import Queue
 import signal
-from threading import Thread
+import threading
 from time import sleep
 import traceback
 
@@ -16,38 +16,30 @@ from subscribers import BasicSubscriber
 
 import os_query
 import search_query
+import workspace_query
 
 app = Flask(__name__)
 CORS(app)
 STATUS_QUEUE = Queue()
 PORT = 5000
 
-# Initialize database and subscribers
-DATABASE = get_database()
-print("Initialized database...")
-status_socket_sub = BasicSubscriber()
-stat_sub_id = "status_socket"
-DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
+# # Temporary workaround, set up to prepare for implementation of workspaces
+# # Write the directory to read test files from to a text file
+# parent_dir = os.path.dirname(os.path.abspath(__file__))
+# with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
+#     f.writelines([parent_dir + "/test_files/"])
 
+# # Read the test file directory from the text file
+# with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
+#     d = f.read()
 
-# Temporary workaround, set up to prepare for implementation of workspaces
-# Write the directory to read test files from to a text file
-parent_dir = os.path.dirname(os.path.abspath(__file__))
-with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
-    f.writelines([parent_dir + "/test_files/"])
+# # Get the files from the test file directory 
+# files = os.listdir(d)
+# files = [(f"{d}{x}", True) for x in files]
 
-# Read the test file directory from the text file
-with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
-    d = f.read()
+# DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
+# DATABASE.select_workspace("ws1")
 
-# Get the files from the test file directory 
-files = os.listdir(d)
-files = [(f"{d}{x}", True) for x in files]
-
-DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
-DATABASE.select_workspace("ws1")
-if DATABASE.should_dump():
-    DATABASE.dump_workspaces()
 
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
@@ -91,9 +83,10 @@ def handle_data():
             content = message["content"]
             
             if mtype == "os_query":
-                res_msg = os_query.process(content)
-                res["type"] = "res"
-                res["content"] = res_msg
+                res, res_msg = os_query.process(content)
+                # res["type"] = "res"
+                # res["content"] = res_raw["content"]
+                # res_msg = res_raw["msg"]
 
             elif mtype == "stats_query":
                 raise Exception("Not Implemented Yet!")
@@ -102,12 +95,16 @@ def handle_data():
             elif mtype == "search_history_query":
                 raise Exception("Not Implemented Yet!")
             elif mtype == "workspace_query":
-                raise Exception("Not Implemented Yet!")
-            
+                res, res_msg = workspace_query.process(content, DATABASE)
+                # res["content"] = res_raw["content"]
+                # res_msg = res_raw["msg"]
+                # res["type"] = "res"
             elif mtype == "search_query":
                 # results to send back to the front end 
-                res = search_query.process(content, DATABASE)
-                res_msg = "Made a search!"
+                res, res_msg = search_query.process(content, DATABASE)
+                # res = res_raw["content"]
+                # print(res)
+                # res_msg = res_raw["msg"]
 
             elif mtype == "settings_query":
                 raise Exception("Not Implemented Yet!")
@@ -120,7 +117,11 @@ def handle_data():
             res["content"] = str(e)
             res_msg = f"{str(e)} - {tb}"
         finally:
-            status_socket_sub.update(res_msg)
+            if res_msg != "":
+                status_socket_sub.update(res_msg)
+                terminal_sub.update(res_msg)
+            if(not res):
+                res = [res_msg]
         
         return jsonify(res)
         
@@ -141,30 +142,80 @@ def get_status():
     except:
         return jsonify({"status": "No updates"})
 
+# Thank you deepseek
+class StoppableDaemonThread(threading.Thread):
+    """
+    Class for handling spawning and killing the state daemon
+    """
+    def __init__(self):
+        super().__init__(daemon=True)
+        self._stop_flag = threading.Event()
+    
+    """
+    Tells the daemon to stop what its doing
+    """
+    def stop(self):
+        self._stop_flag.set()
+    
+    """
+    To check if the thread has stopped
+    """
+    def stopped(self):
+        return self._stop_flag.is_set()
+
+"""
+For handling when the database should dump, and outputting any messages from the program
+"""
+class ProgramStateThread(StoppableDaemonThread):
+    def run(self):
+        while not self.stopped():
+            while(terminal_sub.has_update()):
+                print(terminal_sub.get_oldest_update())
+            if DATABASE.should_dump():
+                DATABASE.dump_workspaces()
+            try:
+                stat_msg = status_socket_sub.get_oldest_update()
+                STATUS_QUEUE.put(stat_msg)
+            except:
+                sleep(3)
+            
+        print("")
+
 
 @app.route('/api/kill', methods=['GET'])
 def kill():
+    
+    sleep(1)
+    worker.stop()
+    worker.join(timeout=2)
+    print("You have killed me! WHyYYYy!?")
     os.kill(os.getpid(), signal.SIGINT)
     return jsonify({"success": True, "message": "Server is shutting down..."})
 
-def status_monitor():
-    """Background thread for status monitoring"""
-    while True:
-        try:
-            stat_msg = status_socket_sub.get_oldest_update()
-            STATUS_QUEUE.put(stat_msg)
-        except:
-            sleep(3)
 
 if __name__ == "__main__":
-    # Start background thread for status monitoring
-    print("Starting API main")
-    Thread(target=status_monitor, daemon=True).start()
+
+    # Initialize database and subscribers
+    DATABASE:Database = get_database()
+    print("Initialized database...")
+    status_socket_sub = BasicSubscriber()
+    stat_sub_id = "status_socket"
+    terminal_sub = BasicSubscriber()
+    term_sub_id = "term_sub"
+    DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
+    DATABASE.add_subscriber(terminal_sub, term_sub_id)
+
     
+    print("Starting API main")
+
+    # Start background thread for state management
+    worker = ProgramStateThread()
+    worker.start()
+
     print(f"Starting Flask server on http://localhost:{PORT}")
     print("Endpoints:")
     print("  POST /api/data - Main data processing endpoint")
     print("  GET  /api/status - Get status updates")
     print("  GET  /api/kill - Shutdown program")
-    
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+
+    app.run(host='0.0.0.0', port=PORT, debug=True, use_reloader=False)

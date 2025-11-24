@@ -7,7 +7,8 @@ Correct input format
     "query":query_str,
     "action":"open"
 }
-{"type":"search_query", "content":{"action":"search", "query":"key words"}}
+Example input from the FrontEnd
+{"type":"search_query", "content":{"action":"search", "query":"Show me some documents about the inuit"}}
 """
 
 def __make_search(content:dict, db:Database):
@@ -15,13 +16,13 @@ def __make_search(content:dict, db:Database):
         raise Exception("No search query passed!")
     query = content["query"]
     res = db.get_search_results(query)
-    res = format_results(res)
+    res = __format_results(res)
     return res
 
 def process(content:dict, db:Database) -> dict:
     if(content["action"] == "search"):
         res = __make_search(content, db)
-        return res
+        return res, ""
     else:
         raise Exception("Invalid Action!")
 
@@ -29,7 +30,7 @@ def process(content:dict, db:Database) -> dict:
 '''
 Format the results so the front end can make use of them 
 '''
-def format_results(raw_results):
+def __format_results(raw_results):
     formatted_results = []
     for i, item in enumerate(raw_results):
         formatted_results.append({

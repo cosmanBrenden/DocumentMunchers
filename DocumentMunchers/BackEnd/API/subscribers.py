@@ -54,7 +54,7 @@ class BasicSubscriber:
             raise Exception("No Messages!")
         
         msg, t = self.update_queue.pop()
-        return f"{datetime.fromtimestamp(round(time.time()))} - {msg}"
+        return f"{datetime.fromtimestamp(round(t))} - {msg}"
     def has_update(self):
         return not self.update_queue.is_empty()
     
