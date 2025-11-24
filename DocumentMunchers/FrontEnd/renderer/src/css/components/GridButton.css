@@ -2,13 +2,24 @@
 .workspace-modal{width:420px;max-width:92vw;background:var(--panel);border-radius:18px;padding:18px;box-shadow:var(--shadow-lg)}
 .workspace-header{font-size:44px;text-align:center;padding:6px 0 8px 0;color:var(--accent-2)}
 .workspace-list{max-height:420px;overflow:auto;border-top:1px solid rgba(0,0,0,0.08);border-bottom:1px solid rgba(0,0,0,0.08);margin-top:8px}
-.workspace-item{display:flex;align-items:center;padding:18px;border-bottom:1px solid rgba(0,0,0,0.04)}
 .workspace-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid rgba(0,0,0,0.06);margin-right:16px}
 .workspace-title{font-size:20px;color:#084024}
-.workspace-desc{color:#496d57}
+.workspace-desc{color:#084024}
 .current-badge{background:#6aa77d;color:#fff;padding:4px 8px;border-radius:8px;margin-left:8px;font-size:12px}
 .workspace-footer{display:flex;justify-content:center;padding:12px}
 
+
+.workspace-item{
+  display:flex;
+  align-items:center;
+  padding:18px;
+  border-bottom:1px solid rgba(0,0,0,0.04); 
+  cursor: pointer;
+}
+
+.workspace-item:hover{
+  background-color: #6aa77d;
+}
 
 .new-workspace{
     background:#d8eed9;
@@ -23,16 +34,16 @@
 
 
 .workspace-actions {
-  position: relative;
+  position: relative; 
   cursor: pointer;
-  padding-left: 24px;
+  padding: 12px;
 }
 
-/* Workspace actions menu */
+/* Workspace actions menu (edit) */
 .workspace-menu {
-  position: absolute;
-  top: -10px;
-  right: -60px;
+  position: relative;
+  top: -30px;
+  right: -10px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -52,7 +63,6 @@
 }
 
 
-/* Edit Modal Styles */
 .edit-modal {
   background:var(--panel);
   border-radius: 8px;
@@ -102,6 +112,9 @@
   padding: 20px;
   flex: 1;
   overflow-y: auto;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color:var(--accent-2);
 }
 
 .file-paths-section {
@@ -112,25 +125,14 @@
 
 .add-path {
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
   margin-bottom: 16px;
 }
 
-.add-path input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.add-path input:focus {
-  outline: none;
-  border-color: #6aa77d;
-}
-
 .add-path button {
-  padding: 8px 16px;
+  padding: 8px;
+  margin: 24px;
   background: #6aa77d;
   color: white;
   border: none;
@@ -245,6 +247,22 @@
 }
 
 .workspace-name-input:focus {
+  outline: none;
+  border-color: #6aa77d;
+  color: #666;
+}
+
+.workspace-description-input{
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: 1px solid #6aa77d;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #666;
+}
+
+.workspace-description-input:focus {
   outline: none;
   border-color: #6aa77d;
   color: #666;

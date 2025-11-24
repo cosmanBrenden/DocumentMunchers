@@ -23,6 +23,7 @@ CORS(app)
 STATUS_QUEUE = Queue()
 PORT = 5000
 
+<<<<<<< Updated upstream
 # Initialize database and subscribers
 DATABASE = get_database()
 print("Initialized database...")
@@ -52,6 +53,8 @@ DATABASE.add_subscriber(terminal_sub, term_sub_id)
 # DATABASE.select_workspace("ws1")
 
 
+=======
+>>>>>>> Stashed changes
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
 def __has_valid_formatting(message: dict) -> bool:

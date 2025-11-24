@@ -125,6 +125,7 @@ def __add_workspace(content:dict, database:Database):
 
     # Will throw an exception if something doesnt jive
     database.add_workspace(ws_id, filepaths, name, description)
+    database.dump_workspaces()
     database.select_workspace(ws_id)
     
 
