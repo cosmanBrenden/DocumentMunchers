@@ -310,6 +310,7 @@ class Database:
         self.workspaces.pop(ws_id)
 
         self.__notify_subscribers(f"Removed workspace '{ws_id}'")
+        
 
     """
     Gets a list of search results based on the query, sorted in descending order
