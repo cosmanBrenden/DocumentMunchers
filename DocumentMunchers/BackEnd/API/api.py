@@ -23,7 +23,7 @@ CORS(app)
 STATUS_QUEUE = Queue()
 PORT = 5000
 
-<<<<<<< Updated upstream
+
 # Initialize database and subscribers
 DATABASE = get_database()
 print("Initialized database...")
@@ -34,27 +34,6 @@ term_sub_id = "term_sub"
 DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
 DATABASE.add_subscriber(terminal_sub, term_sub_id)
 
-
-# # Temporary workaround, set up to prepare for implementation of workspaces
-# # Write the directory to read test files from to a text file
-# parent_dir = os.path.dirname(os.path.abspath(__file__))
-# with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
-#     f.writelines([parent_dir + "/test_files/"])
-
-# # Read the test file directory from the text file
-# with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
-#     d = f.read()
-
-# # Get the files from the test file directory 
-# files = os.listdir(d)
-# files = [(f"{d}{x}", True) for x in files]
-
-# DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
-# DATABASE.select_workspace("ws1")
-
-
-=======
->>>>>>> Stashed changes
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
 def __has_valid_formatting(message: dict) -> bool:
