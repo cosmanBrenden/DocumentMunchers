@@ -19,5 +19,6 @@ pip install scipy
 pip install scikit-learn
 pip install lftk
 pip install spacy
+pip install nltk
 python3 -m spacy download en_core_web_sm
 deactivate

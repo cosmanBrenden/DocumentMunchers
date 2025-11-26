@@ -20,5 +20,6 @@ pip install scipy
 pip install scikit-learn
 pip install lftk
 pip install spacy
+pip install nltk
 python -m spacy download en_core_web_sm
 call venv\Scripts\deactivate.bat

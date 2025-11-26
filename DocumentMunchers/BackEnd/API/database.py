@@ -136,7 +136,7 @@ class Database:
                 file_content = file_system.read_file_content(fp)
                 # If there should be summarization, summarize the file
                 if(file["ai"] and self.summarizer != None):
-                    
+                    self.__notify_subscribers(f"Summarizing {fp}...")
                     file["summary"] = self.summarizer.summarize(file_content)
                 else:
                     

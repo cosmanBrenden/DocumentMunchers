@@ -36,7 +36,7 @@ def __format_results(raw_results):
         formatted_results.append({
             "id": item[1]['id'],
             "title": item[0],
-            "summary": '[summaries not available at this time]',
+            "summary": item[1]["summary"] if item[1]["summary"] != None else "No summary available!",
             "relevance": int(float(item[2]) * 100), 
             "lastOpened": datetime.fromtimestamp(item[1]['date_modified'], tz=timezone(timedelta(hours=-4), 'AST')),
             "keywords": item[1]['keywords']
