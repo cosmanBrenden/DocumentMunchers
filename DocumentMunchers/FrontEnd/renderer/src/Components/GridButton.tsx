@@ -26,6 +26,15 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
     fetchWorkspaces().then(() => setInitialLoadComplete(true));
   }, [])
 
+  // Listen for custom event to open workspace popup
+  useEffect(() => {
+    const handleOpenPopup = () => {
+      handleNewWorkspace();
+    };
+    window.addEventListener('openWorkspacePopup', handleOpenPopup);
+    return () => window.removeEventListener('openWorkspacePopup', handleOpenPopup);
+  }, [])
+
   // Fetch workspaces when the workspaces window is opened
   useEffect(() => {
     if (open) {
@@ -63,11 +72,6 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
           const currentWorkspace = mappedWorkspaces.find(w => w.current);
           if(currentWorkspace && currentWorkspace.id){
             setCurrentWorkspaceId(currentWorkspace.id);
-          }
-
-          // Show popup if no workspaces exist after initial load
-          if (initialLoadComplete && mappedWorkspaces.length === 0 && !editWorkspace) {
-            handleNewWorkspace();
           }
         }
       } 
