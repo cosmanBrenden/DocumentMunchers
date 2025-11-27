@@ -24,7 +24,7 @@
 .grid-keywords ul{margin:0;padding-left:18px}
 .grid-keywords li{margin-bottom:6px}
 .grid-summary{color:#666;margin-top:6px}
-.grid-last{margin-top:auto;text-align:right;color:var(--accent);font-weight:700}
+.grid-last{margin-top:auto;text-align:right;color:var(--accent)}
 
 @media (max-width:900px){
   .grid-result-card{padding:18px}
