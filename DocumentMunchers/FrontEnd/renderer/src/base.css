@@ -27,9 +27,9 @@ html, body, #root{
 
 /* Search / main area */
 .main-area{flex:1;display:flex;align-items:flex-start;justify-content:center;padding-top:68px}
-.search-row{width:100%;display:flex;justify-content:center}
+.search-row{width:100%;display:flex;justify-content:center;padding:0 56px}
 .search-box{
-  width:75%;max-width:920px;background:var(--panel);border-radius:28px;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 14px 28px rgba(0,0,0,0.06)
+  width:100%;max-width:1200px;background:var(--panel);border-radius:28px;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 14px 28px rgba(0,0,0,0.06);margin:0 auto
 }
 .search-text{color:var(--muted);font-size:18px}
 .search-input{flex:1;border:none;background:transparent;padding:8px 12px;font-size:18px;color:var(--text);outline:none}
@@ -40,7 +40,10 @@ html, body, #root{
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;z-index:80}
 
 /* Responsive helpers */
-@media (max-width:800px){.search-box{width:92%}}
+@media (max-width:800px){
+  .search-row{padding:0 16px}
+  .search-box{width:100%}
+}
 
 /* Utility classes */
 .hidden{display:none}

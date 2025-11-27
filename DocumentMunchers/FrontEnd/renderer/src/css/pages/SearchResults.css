@@ -1,5 +1,9 @@
 .results-root{padding:0px 56px}
-.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+
+/* Remove padding from search-row when it's inside results-root */
+.results-root .search-row{padding: 0; padding-bottom: 5px;}
+
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;max-width:1200px;margin-left:auto;margin-right:auto}
 .results-query{font-size:20px;color:var(--muted)}
 .results-count{color:var(--muted)}
 
