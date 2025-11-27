@@ -49,6 +49,7 @@ export default function WorkspaceEditModal({
       <div className="edit-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>
+            Workspace Name
             <input
               type="text"
               value={workspace.name}
