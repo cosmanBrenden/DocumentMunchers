@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/components/ResultCard.css'
+import '../css/components/ListResultCard.css'
 
 type Props = {
   title: string
