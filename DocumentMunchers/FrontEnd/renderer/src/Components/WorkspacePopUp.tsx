@@ -16,6 +16,7 @@ type WorkspaceEditModalProps = {
   onUpdateDescription: (desc: string) => void
   onRemoveFilePath: (index: number) => void
   onAddFilePath: () => void
+  allowClose?: boolean
 }
 
 export default function WorkspaceEditModal({
@@ -26,16 +27,28 @@ export default function WorkspaceEditModal({
   onUpdateName,
   onUpdateDescription,
   onRemoveFilePath,
-  onAddFilePath
+  onAddFilePath,
+  allowClose = true
 }: WorkspaceEditModalProps) {
   if (!workspace) return null
 
+  const handleBackdropClick = () => {
+    if (allowClose) {
+      onClose();
+    }
+  };
+
+  const handleCloseClick = () => {
+    if (allowClose) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="edit-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>
-            Workspace Name
             <input
               type="text"
               value={workspace.name}
@@ -44,7 +57,7 @@ export default function WorkspaceEditModal({
               placeholder="Workspace Name"
             />
           </h3>
-          <button className="close-button" onClick={onClose}>×</button>
+          {allowClose && <button className="close-button" onClick={handleCloseClick}>×</button>}
         </div>
         <div className="modal-content">
           <h4>
@@ -82,9 +95,11 @@ export default function WorkspaceEditModal({
         </div>
         
         <div className="modal-footer">
-          <button className="cancel-button" onClick={onClose}>
-            Cancel
-          </button>
+          {allowClose && (
+            <button className="cancel-button" onClick={handleCloseClick}>
+              Cancel
+            </button>
+          )}
           <button className="save-button" onClick={onSave}>
             Save Changes
           </button>

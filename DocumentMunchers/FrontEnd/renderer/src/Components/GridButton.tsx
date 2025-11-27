@@ -19,6 +19,12 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
   const [filePaths, setFilePaths] = useState<string[]>([])
   const [backendWorkspaces, setBackendWorkspaces] = useState<Workspace[]>([]) 
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(null);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
+  // Fetch workspaces on initial load to check if popup should be shown
+  useEffect(() => {
+    fetchWorkspaces().then(() => setInitialLoadComplete(true));
+  }, [])
 
   // Fetch workspaces when the workspaces window is opened
   useEffect(() => {
@@ -57,6 +63,11 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
           const currentWorkspace = mappedWorkspaces.find(w => w.current);
           if(currentWorkspace && currentWorkspace.id){
             setCurrentWorkspaceId(currentWorkspace.id);
+          }
+
+          // Show popup if no workspaces exist after initial load
+          if (initialLoadComplete && mappedWorkspaces.length === 0 && !editWorkspace) {
+            handleNewWorkspace();
           }
         }
       } 
@@ -359,6 +370,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         onUpdateDescription={updateWorkspaceDescription}
         onRemoveFilePath={removeFilePath}
         onAddFilePath={addFilePath}
+        allowClose={backendWorkspaces.length > 0}
       />
     </>
   )
