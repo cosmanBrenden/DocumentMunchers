@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react' 
 import IconButton from './IconButton'
+import WorkspaceEditModal from './WorkspacePopUp'
 import '../css/components/GridButton.css'
 
 // Grid Button opens workspace selection and management
@@ -349,67 +350,16 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
       )}
 
       {/* Edit workspace window */}
-      {editWorkspace && (
-        <div className="modal-backdrop" onClick={() => setEditWorkspace(null)}>
-          <div className="edit-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>
-                Workspace Name 
-                <input
-                  type="text"
-                  value={editWorkspace.name}
-                  onChange={(e) => updateWorkspaceName(e.target.value)}
-                  className="workspace-name-input"
-                />
-              </h3>
-              <button className="close-button" onClick={() => setEditWorkspace(null)}>×</button>
-            </div>
-            <div className="modal-content">
-              <h4>
-                Description
-                <input
-                  type="text"
-                  value={editWorkspace.desc}
-                  onChange={(e) => updateWorkspaceDescription(e.target.value)}
-                  className="workspace-description-input"
-                />
-              </h4>
-              <div className="file-paths-section">
-                <h4>Workspace Files</h4>
-                <div className="file-paths-list">
-                  {filePaths.map((path, index) => (
-                    <div key={index} className="file-path-item">
-                      <span className="path-text">{path}</span>
-                      <button 
-                        className="remove-path"
-                        onClick={() => removeFilePath(index)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                  {filePaths.length === 0 && (
-                    <div className="no-paths">No files added yet</div>
-                  )}
-                </div>
-
-                <div className="add-path">
-                  <button onClick={addFilePath}>Add Files...</button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="modal-footer">
-              <button className="cancel-button" onClick={() => setEditWorkspace(null)}>
-                Cancel
-              </button>
-              <button className="save-button" onClick={saveWorkspace}>
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <WorkspaceEditModal
+        workspace={editWorkspace}
+        filePaths={filePaths}
+        onClose={() => setEditWorkspace(null)}
+        onSave={saveWorkspace}
+        onUpdateName={updateWorkspaceName}
+        onUpdateDescription={updateWorkspaceDescription}
+        onRemoveFilePath={removeFilePath}
+        onAddFilePath={addFilePath}
+      />
     </>
   )
 }
