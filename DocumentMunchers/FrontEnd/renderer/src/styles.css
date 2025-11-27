@@ -1,11 +1,3 @@
-/*
-	Refactored styles.css
-	- Organized into clear sections
-	- CSS variables for theme colors, spacing, radii
-	- Component sections: topbar, search, buttons, modals, side-menu, workspace
-	- Keep existing class names so JS/TSX doesn't need changes
-	- Aim: easy to read and open-closed: add new components by adding new classes, avoid brittle selectors
-*/
 
 :root{
 	/* Colors */
@@ -150,6 +142,3 @@ html, body, #root{
 /* ------------------- Utilities (small helpers) ------------------- */
 .hidden{display:none}
 .center{display:flex;align-items:center;justify-content:center}
-
-/* End of stylesheet */
-
