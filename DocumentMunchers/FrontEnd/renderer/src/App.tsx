@@ -10,12 +10,50 @@ import SearchResults from './Pages/SearchResults'
 
 export default function App() {
   const [route, setRoute] = useState(window.location.hash || '#/')
+  const [shouldCheckWorkspaces, setShouldCheckWorkspaces] = useState(true)
 
   useEffect(() => {
     const onHash = () => setRoute(window.location.hash || '#/')
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
+
+  // Check if workspaces exist on initial load
+  useEffect(() => {
+    if (!shouldCheckWorkspaces) return
+
+    const checkWorkspaces = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "type": "workspace_query",
+            "content": {
+              "action": "list_workspaces"
+            }
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (Array.isArray(result) && result.length === 0) {
+            // No workspaces exist, trigger the workspace popup by dispatching a custom event
+            window.dispatchEvent(new CustomEvent('openWorkspacePopup'));
+          }
+        }
+      } catch (error) {
+        console.error('Error checking workspaces:', error);
+      } finally {
+        setShouldCheckWorkspaces(false);
+      }
+    };
+
+    checkWorkspaces();
+  }, [shouldCheckWorkspaces])
+
   return (
     <div className="app-root">
       <Header />

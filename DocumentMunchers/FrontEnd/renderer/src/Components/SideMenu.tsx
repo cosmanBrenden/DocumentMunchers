@@ -55,6 +55,11 @@ export default function SideMenu({ open, onClose }: { open: boolean; onClose?: (
           </div>
           <ul className="side-menu-list">
             <li>
+              <a href="#/" className="side-link" onClick={handleNavClick}>
+                Home Page
+              </a>
+            </li>
+            <li>
               <a href="#/search-history" className="side-link" onClick={handleNavClick}>
                 Search History
               </a>
