@@ -97,8 +97,8 @@ def handle_data():
             if res_msg != "":
                 status_socket_sub.update(res_msg)
                 terminal_sub.update(res_msg)
-            if(not res):
-                res = [res_msg]
+            # if(not res):
+              #  res = [res_msg]
         
         return jsonify(res)
         
