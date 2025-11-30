@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import '../css/components/WorkspacePopUp.css'
 
 type Workspace = {
   id?: string
@@ -11,7 +12,7 @@ type WorkspaceEditModalProps = {
   workspace: Workspace | null
   filePaths: string[]
   onClose: () => void
-  onSave: () => void
+  onSave: () => Promise<void>
   onUpdateName: (name: string) => void
   onUpdateDescription: (desc: string) => void
   onRemoveFilePath: (index: number) => void
@@ -30,55 +31,121 @@ export default function WorkspaceEditModal({
   onAddFilePath,
   allowClose = true
 }: WorkspaceEditModalProps) {
+  const[isSaving, setIsSaving] = useState(false)
   if (!workspace) return null
 
   const handleBackdropClick = () => {
-    if (allowClose) {
+    if (allowClose && !isSaving) {
       onClose();
     }
   };
 
   const handleCloseClick = () => {
-    if (allowClose) {
+    if (allowClose && !isSaving) {
       onClose();
     }
   };
 
-  return (
+  const handleSaveClick = async () => {
+    if (isSaving) return;
+    
+    setIsSaving(true);
+    try {
+      await onSave();
+    } catch (error) {
+      console.error('Error saving workspace:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleRemoveFilePath = (index: number) => {
+    if (!isSaving) {
+      onRemoveFilePath(index);
+    }
+  };
+
+  const handleAddFilePath = () => {
+    if (!isSaving) {
+      onAddFilePath();
+    }
+  };
+
+  const handleUpdateName = (name: string) => {
+    if (!isSaving) {
+      onUpdateName(name);
+    }
+  };
+
+  const handleUpdateDescription = (desc: string) => {
+    if (!isSaving) {
+      onUpdateDescription(desc);
+    }
+  };
+
+
+ return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
-      <div className="edit-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>
-            Workspace Name
+      <div className="edit-panel" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
+        {/* Loading Overlay */}
+        {isSaving && (
+          <div className="saving-overlay">
+            <div className="saving-spinner">
+              <img src={"/logo-no-text.png"} alt="" />
+            </div>
+            <div className="saving-text">Saving changes to workspace...</div>
+          </div>
+        )}
+        
+        <div className="edit-workspace-header">
+          {allowClose && (
+            <button 
+              className="close-button" 
+              onClick={handleCloseClick}
+              disabled={isSaving}
+            >
+              ×
+            </button>
+          )}
+        </div>
+        <div className="edit-workspace-title">
+          Workspace Editor
+        </div>
+        <div className="edit-name">
+            Name
             <input
               type="text"
               value={workspace.name}
-              onChange={(e) => onUpdateName(e.target.value)}
+              onChange={(e) => handleUpdateName(e.target.value)}
               className="workspace-name-input"
-              placeholder="Workspace Name"
+              placeholder="enter a workspace name..."
+              disabled={isSaving}
             />
-          </h3>
-          {allowClose && <button className="close-button" onClick={handleCloseClick}>×</button>}
         </div>
-        <div className="modal-content">
-          <h4>
+        <div className="edit-description">
             Description
             <input
               type="text"
               value={workspace.desc}
-              onChange={(e) => onUpdateDescription(e.target.value)}
+              onChange={(e) => handleUpdateDescription(e.target.value)}
               className="workspace-description-input"
+              placeholder="enter a workspace description..."
+              disabled={isSaving}
             />
-          </h4>
+        </div>
+        <div className="modal-content">
           <div className="file-paths-section">
-            <h4>Workspace Files</h4>
+            <div className="files-text">
+              Workspace Files
+            </div>
             <div className="file-paths-list">
               {filePaths.map((path, index) => (
                 <div key={index} className="file-path-item">
                   <span className="path-text">{path}</span>
                   <button 
                     className="remove-path"
-                    onClick={() => onRemoveFilePath(index)}
+                    onClick={() => handleRemoveFilePath(index)}
+                    disabled={isSaving}
                   >
                     ×
                   </button>
@@ -90,19 +157,39 @@ export default function WorkspaceEditModal({
             </div>
 
             <div className="add-path">
-              <button onClick={onAddFilePath}>Add Files...</button>
+              <button 
+                onClick={handleAddFilePath}
+                disabled={isSaving}
+              >
+                Add Files...
+              </button>
             </div>
           </div>
         </div>
         
         <div className="modal-footer">
           {allowClose && (
-            <button className="cancel-button" onClick={handleCloseClick}>
+            <button 
+              className="cancel-button" 
+              onClick={handleCloseClick}
+              disabled={isSaving}
+            >
               Cancel
             </button>
           )}
-          <button className="save-button" onClick={onSave}>
-            Save Changes
+          <button 
+            className="save-button" 
+            onClick={handleSaveClick}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <>
+                <span className="save-spinner"></span>
+                Saving...
+              </>
+            ) : (
+              'Save Changes'
+            )}
           </button>
         </div>
       </div>

@@ -20,6 +20,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
   const [backendWorkspaces, setBackendWorkspaces] = useState<Workspace[]>([]) 
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(null);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [isSavingWorkspace, setIsSavingWorkspace] = useState(false);
 
   // Fetch workspaces on initial load to check if popup should be shown
   useEffect(() => {
@@ -143,8 +144,8 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         const result = await response.json();
         setEditWorkspace({ 
           id: result.id,
-          name: 'New Workspace', 
-          desc: "description of the workspace"
+          name: "", 
+          desc: ""
         });
         setFilePaths([]);
       }
@@ -173,11 +174,13 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
   }
 
   // Save a new/edited workspace
-  const saveWorkspace = async () => {
+  const saveWorkspace = async (): Promise<void> => {
     if (!editWorkspace) return;
 
     // True if the files should be preprocessed, false otherwise (all true for now)
     const filePathTuples = filePaths.map(path => [path, true]);
+    // Set loading state
+    setIsSavingWorkspace(true); 
 
     try {
       const response = await fetch('http://localhost:5000/api/data', {
@@ -204,13 +207,19 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         console.log("Workspace saved: ", result);
         setEditWorkspace(null);
         setFilePaths([]);
-        fetchWorkspaces();
+        // Wait for workspaces to refresh
+        await fetchWorkspaces(); 
+      } else {
+        throw new Error('Failed to save workspace');
       }
     } catch (error) {
       console.error('Error saving workspace:', error);
+      throw error; 
+    } finally {
+      // Clear loading state
+      setIsSavingWorkspace(false); 
     }
   };
-
 
   // Add new file paths to the workspace that is being edited 
   const addFilePath = async () => {
@@ -239,7 +248,6 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         console.error('Error adding directory:', error);
     }
   };
-
 
   // Select a workspace to be the current active workspace
   const handleWorkspaceSelect = async (workspace: Workspace) => {
@@ -277,38 +285,38 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
 
   // Delete a workspace 
   const removeWorkspace = async (workspace: Workspace) => {
-  if (!workspace.id) {
-    console.error('Cannot remove workspace without ID');
-    return;
-  }
-
-  try {
-    const response = await fetch('http://localhost:5000/api/data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "type": "workspace_query",
-        "content": {
-          "action": "remove_workspace",
-          "id": workspace.id
-        }
-      }),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Workspace removed: ", result);
-      
-      // Close menu & update workspaces list
-      setMenuOpen(null);
-      fetchWorkspaces();
+    if (!workspace.id) {
+      console.error('Cannot remove workspace without ID');
+      return;
     }
-  } catch (error) {
-    console.error('Error removing workspace:', error);
-  }
-};
+
+    try {
+      const response = await fetch('http://localhost:5000/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "type": "workspace_query",
+          "content": {
+            "action": "remove_workspace",
+            "id": workspace.id
+          }
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Workspace removed: ", result);
+        
+        // Close menu & update workspaces list
+        setMenuOpen(null);
+        fetchWorkspaces();
+      }
+    } catch (error) {
+      console.error('Error removing workspace:', error);
+    }
+  };
 
   return (
     <>
@@ -325,7 +333,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
       {open && (
         <div className="modal-backdrop" onClick={() => setOpen(false)}>
           <div className="workspace-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
-            <div className="workspace-header">Workspace</div>
+            <div className="workspace-header">Workspaces</div>
 
             <div className="workspace-list">
               {list.map((w, idx) => (
@@ -368,7 +376,11 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
       <WorkspaceEditModal
         workspace={editWorkspace}
         filePaths={filePaths}
-        onClose={() => setEditWorkspace(null)}
+        onClose={() => {
+          if (!isSavingWorkspace) {
+            setEditWorkspace(null);
+          }
+        }}
         onSave={saveWorkspace}
         onUpdateName={updateWorkspaceName}
         onUpdateDescription={updateWorkspaceDescription}

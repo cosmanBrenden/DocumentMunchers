@@ -18,16 +18,16 @@ export default function ListResultCard({ title, summary, relevance, lastOpened, 
       <div className="result-left">
         <div className="pdf-icon" aria-hidden>
           <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="14" height="18" rx="2" stroke="#000" strokeWidth="1.6" fill="none" />
+            <rect x="3" y="3" width="14" height="18" rx="2" stroke="#000" strokeWidth="1.6" fill="" />
             <path d="M17 7v-4l4 4" stroke="#000" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            <text x="6" y="18" fontSize="8" fill="#000">PDF</text>
+            <text x="4" y="16" fontSize="7" fill="#000" >PDF</text>
           </svg>
         </div>
       </div>
 
       <div className="result-body">
         <div className="result-top">
-          <h3 className="result-title">{title.split('/')[title.split('/').length - 1]}</h3>
+          <h3 className="result-title">{title.split(/[\\/]/).pop()}</h3>
           <div className="relevance-pill">{relevance}% Relevant</div>
         </div>
 
