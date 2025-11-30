@@ -18,19 +18,10 @@ type WorkspaceEditModalProps = {
   onUpdateDescription: (desc: string) => void
   onRemoveFilePath: (index: number) => void
   onAddFilePath: () => void 
-   /* onAddFilePath: (path: string) => void */
   allowClose?: boolean
 }
 
-/*
-declare global {
-  interface Window {
-    electronAPI: {
-      showDirectoryDialog: () => Promise<string> | null // Now returns just the path string
-    }
-  }
-}
-*/
+
 
 export default function WorkspaceEditModal({
   workspace,
@@ -84,29 +75,6 @@ export default function WorkspaceEditModal({
       onAddFilePath();
     }
   };
-  //*/
-
-  /*
-  const handleAddFilesClick = async () => {
-  if (!window.electronAPI) {
-    console.error('Electron API not available')
-    return
-  }
-
-  setIsSelecting(true)
-  try {
-    const directoryPath = await window.electronAPI.showDirectoryDialog()
-    
-    if (directoryPath) {
-      // Just add the directory path directly
-      onAddFilePath(directoryPath)
-    }
-  } catch (error) {
-    console.error('Error selecting directory:', error)
-  } finally {
-    setIsSelecting(false)
-  }
-  } */
 
   const handleUpdateName = (name: string) => {
     if (!isSaving) {

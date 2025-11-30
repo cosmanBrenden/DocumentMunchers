@@ -82,35 +82,18 @@ export default function SearchResults({ query, results: externalResults, onResul
       }
     }
 
-  // Show the fetched/external results unless the resultsState is null, in which case show mockResults
-  /* 
-   const results = externalResults && externalResults.length > 0
-   ? externalResults : resultsState === null ? mockResults(query || '') 
-   : resultsState || []
-  */
-  
+    
    // Get the final results to display
-
-  // /*
   const getDisplayResults = () => {
     console.log("External Results: ", externalResults)
-    // if (externalResults !== undefined && externalResults.length > 0) {
 
     console.log("Results State: ", resultsState)
     if (externalResults !== undefined) {
       return externalResults
     }
     return resultsState || [];
-    /*
-    if (resultsState !== null){
-      return resultsState || []
-    }
-    else{
-      return mockResults(query || '')
-    }
-      */
   }
- // */
+ 
   const results = getDisplayResults();
 
   const [view, setView] = useState<'list' | 'grid'>('list');
@@ -134,7 +117,7 @@ export default function SearchResults({ query, results: externalResults, onResul
         <div className="error-page">
           <h2>No search results found</h2>
           <p>Your search for "{query || ''}" did not return any results.</p>
-          <p>Please try different keywords or check your spelling.</p>
+          <p>Make sure you have a workspace selected and that there are files in the workspace.</p>
         </div>
       ) : (
         // Display results when available

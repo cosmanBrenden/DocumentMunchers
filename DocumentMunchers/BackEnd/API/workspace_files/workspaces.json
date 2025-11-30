@@ -1,34 +1,4 @@
 [
-    {
-        "Wor_ace1130": {
-            "files": {
-                "C:/Users/ajpit/Desktop/School/_Courses/Fall 2025/COMP_4721_Software_Design/Term_Project/Group_Assignment_05/Test_Files/Test_Files_02\\Clare-OralHistoryCanada-1973.pdf": {
-                    "ai": true,
-                    "summary": " ORAL HISTORY IN CANADA: AN OVERVIEW\n\n LEO LA CLARE\n\n An overview of oral history in Canada is warranted\n\n because oral history here has several distinctive features:\n there are large numbers of oral ",
-                    "tfidf": "Wor_ace1130_0",
-                    "date_modified": 1763847024.1002083,
-                    "id": 0
-                },
-                "C:/Users/ajpit/Desktop/School/_Courses/Fall 2025/COMP_4721_Software_Design/Term_Project/Group_Assignment_05/Test_Files/Test_Files_02\\Hartland-FactorsEconomicGrowth-1955.pdf": {
-                    "ai": true,
-                    "summary": "Real national product grew at an annual average rate of nearly\n\n 8 per cent in the first decade of this century; population at more than\n\n 3 per cent; real output per capita at 3V2 per cent; real outp",
-                    "tfidf": "Wor_ace1130_1",
-                    "date_modified": 1763847024.1166372,
-                    "id": 1
-                }
-            },
-            "search_history": [],
-            "file_history": [],
-            "name": "Workspace",
-            "description": "Description"
-        },
-        "W21130": {
-            "files": {},
-            "search_history": [],
-            "file_history": [],
-            "name": "W2",
-            "description": "None"
-        }
-    },
-    "Wor_ace1130"
+    {},
+    null
 ]
