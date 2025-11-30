@@ -29,7 +29,7 @@ export default function GridResultCard({ title, summary, keywords, relevance, la
         )}
       </div>
 
-      <div className="grid-title">{title.split('/')[title.split('/').length - 1]}</div>
+      <div className="grid-title">{title.split(/[\\/]/).pop()}</div>
 
       {keywords && keywords.length > 0 ? (
         <div className="grid-keywords">

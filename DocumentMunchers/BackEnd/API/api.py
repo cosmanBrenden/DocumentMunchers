@@ -14,6 +14,8 @@ from database import Database
 from setup import get_database
 from subscribers import BasicSubscriber
 
+from datetime import datetime
+
 import os_query
 import search_query
 import workspace_query
@@ -191,6 +193,12 @@ def kill():
     print("You have killed me! WHyYYYy!?")
     os.kill(os.getpid(), signal.SIGINT)
     return jsonify({"success": True, "message": "Server is shutting down..."})
+
+
+# Lets the front end check if the back end is ready
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "ready", "timestamp": datetime.now().isoformat()})
 
 
 if __name__ == "__main__":

@@ -16,10 +16,10 @@
   border-color:rgba(126,179,141,0.55);
 }
 .grid-top{display:flex;justify-content:space-between;align-items:flex-start}
-.grid-top .pdf-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.grid-top .pdf-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:24px}
 .relevance-pill{background:var(--accent);color:white;padding:8px 14px;border-radius:20px;font-size:13px}
 .grid-title{font-size:20px;margin:14px 0 6px 0;font-weight:600}
-.grid-keywords{color:#444;font-size:14px;margin-top:6px}
+.grid-keywords{color:var(--text);font-size:14px;margin-top:6px}
 .grid-keywords .kw-label{font-weight:700;margin-bottom:6px}
 .grid-keywords ul{margin:0;padding-left:18px}
 .grid-keywords li{margin-bottom:6px}
