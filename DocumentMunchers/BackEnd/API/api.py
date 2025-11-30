@@ -25,24 +25,6 @@ CORS(app)
 STATUS_QUEUE = Queue()
 PORT = 5000
 
-# # Temporary workaround, set up to prepare for implementation of workspaces
-# # Write the directory to read test files from to a text file
-# parent_dir = os.path.dirname(os.path.abspath(__file__))
-# with open(parent_dir + "/workspace_files/test_dir.txt", "w", encoding="utf-8") as f:
-#     f.writelines([parent_dir + "/test_files/"])
-
-# # Read the test file directory from the text file
-# with open(parent_dir + "/workspace_files/test_dir.txt", "r", encoding="utf-8") as f:
-#     d = f.read()
-
-# # Get the files from the test file directory 
-# files = os.listdir(d)
-# files = [(f"{d}{x}", True) for x in files]
-
-# DATABASE.add_workspace("ws1", files, "workspace_name", "workspace_description")
-# DATABASE.select_workspace("ws1")
-
-
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
 def __has_valid_formatting(message: dict) -> bool:
@@ -86,9 +68,6 @@ def handle_data():
             
             if mtype == "os_query":
                 res, res_msg = os_query.process(content)
-                # res["type"] = "res"
-                # res["content"] = res_raw["content"]
-                # res_msg = res_raw["msg"]
 
             elif mtype == "stats_query":
                 raise Exception("Not Implemented Yet!")
@@ -98,15 +77,11 @@ def handle_data():
                 raise Exception("Not Implemented Yet!")
             elif mtype == "workspace_query":
                 res, res_msg = workspace_query.process(content, DATABASE)
-                # res["content"] = res_raw["content"]
-                # res_msg = res_raw["msg"]
-                # res["type"] = "res"
+
             elif mtype == "search_query":
                 # results to send back to the front end 
                 res, res_msg = search_query.process(content, DATABASE)
-                # res = res_raw["content"]
-                # print(res)
-                # res_msg = res_raw["msg"]
+
 
             elif mtype == "settings_query":
                 raise Exception("Not Implemented Yet!")
