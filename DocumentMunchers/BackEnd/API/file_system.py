@@ -245,8 +245,6 @@ to index
 """
 def ask_user_for_directory():
     files = []
-    root = tk.Tk()
-    root.withdraw()
     directory = filedialog.askdirectory()
     __directory_dfs(directory, files)
     print("Selected Files: ", files)
