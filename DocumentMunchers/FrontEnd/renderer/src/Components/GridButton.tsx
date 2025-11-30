@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react' 
+import React, { useState, useEffect, useRef } from 'react' 
 import IconButton from './IconButton'
 import WorkspaceEditModal from './WorkspacePopUp'
 import '../css/components/GridButton.css'
@@ -42,6 +42,23 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
       fetchWorkspaces()
     }
   }, [open])
+
+
+  const menuRef = useRef<HTMLDivElement>(null); 
+  // Handle clicks outside the menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   const fetchWorkspaces = async () => {
     try {
@@ -346,6 +363,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
                   
                   {/* Workspace actions menu */}
                   <div 
+                    ref={menuRef}
                     className="workspace-actions" 
                     onClick={(e) => {
                       e.stopPropagation()
@@ -371,6 +389,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
           </div>
         </div>
       )}
+
 
       {/* Edit workspace window */}
       <WorkspaceEditModal

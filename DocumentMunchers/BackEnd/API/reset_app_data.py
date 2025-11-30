@@ -9,8 +9,8 @@ if check.lower() == 'y':
     api_path = os.path.dirname(os.path.abspath(__file__))
 
     # Clear path in test_dir.txt
-    with open(api_path + '/workspace_files/test_dir.txt', "w", encoding="utf-8") as f:
-        f.writelines([])
+    #with open(api_path + '/workspace_files/test_dir.txt', "w", encoding="utf-8") as f:
+        #f.writelines([])
 
     # Delete all files in TFIDFS
     tfidfs_path = api_path + '/workspace_files/TFIDFS/'

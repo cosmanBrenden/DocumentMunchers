@@ -162,8 +162,6 @@ export default function WorkspaceEditModal({
             </div>
 
             <div className="add-path">
-              {/* onClick={handleAddFilesClick} */}
-               {/* */}
               <button 
                 onClick={handleAddFilePath} 
                 disabled={isSaving}

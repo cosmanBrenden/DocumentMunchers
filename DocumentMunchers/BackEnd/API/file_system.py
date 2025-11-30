@@ -80,18 +80,20 @@ Uses depth first search to get all files under some directory
 @param files The list to store paths in
 """
 def __directory_dfs(directory:str, files:list):
-    # Iterate through each file in the directory
-    for entry in os.listdir(directory):
-        # Construct the full path of the file
-        full_path = os.path.join(directory, entry)
-        # If the filepath points to a directory, recursively search it
-        if os.path.isdir(full_path):
-            __directory_dfs(full_path, files)
-        # Else, its a file, potentially save its path if we want to read it
-        else:
-            ext = __get_extension(full_path)
-            if(ext in VALID_FILE_TYPES):
-                files.append(full_path)
+    # Make sure the user didn't click cancel when choosing a directory
+    if directory != '':
+        # Iterate through each file in the directory
+        for entry in os.listdir(directory):
+            # Construct the full path of the file
+            full_path = os.path.join(directory, entry)
+            # If the filepath points to a directory, recursively search it
+            if os.path.isdir(full_path):
+                __directory_dfs(full_path, files)
+            # Else, its a file, potentially save its path if we want to read it
+            else:
+                ext = __get_extension(full_path)
+                if(ext in VALID_FILE_TYPES):
+                    files.append(full_path)
 
 """
 Private helper function, reads in a file as if it is plaintext
