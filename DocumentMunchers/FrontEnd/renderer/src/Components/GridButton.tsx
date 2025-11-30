@@ -99,10 +99,13 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
   };
 
   // Use workspaces from back end if available, otherwise use default
-  const list = backendWorkspaces.length > 0 ? backendWorkspaces : 
+  
+  /* const list = backendWorkspaces.length > 0 ? backendWorkspaces : 
                (workspaces && workspaces.length > 0) ? workspaces : 
                [{ id: 'default', name: 'Default workspace', desc: '', current: true }]
-
+*/
+ 
+  const list = backendWorkspaces;
 
   // Edit an existing workspace
   const handleEdit = async (workspace: Workspace) => {
@@ -405,7 +408,8 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         onUpdateDescription={updateWorkspaceDescription}
         onRemoveFilePath={removeFilePath}
         onAddFilePath={addFilePath}
-        allowClose={backendWorkspaces.length > 0}
+        allowClose={true}
+        // allowClose={backendWorkspaces.length > 0}
       />
     </>
   )
