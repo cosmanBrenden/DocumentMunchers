@@ -1,7 +1,7 @@
 import json
 import os
-from pdfminer.high_level import extract_text
 from pdfminer.layout import LAParams
+from pdfminer.high_level import extract_text
 import pickle
 import platform
 # from PyPDF2 import PdfFileReader

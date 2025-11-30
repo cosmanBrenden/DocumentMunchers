@@ -1,5 +1,5 @@
 @echo off
-call venv\Scripts\activate.bat
-start "API Server" python "./BackEnd/API/api.py"
+@REM call venv\Scripts\activate.bat
+cd "./FrontEnd/" && npm run dev
 timeout /t 3 /nobreak > nul
 cd "./FrontEnd/" && npm run dev
