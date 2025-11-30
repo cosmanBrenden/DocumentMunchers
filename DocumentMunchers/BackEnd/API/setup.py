@@ -10,6 +10,7 @@ Constructs an instance of a database
 """
 def get_database():
     pos = POS_Enforcer()
+    print("yes")
     emb = Embedding_Model()
     sim = Similarity(checker=pos, emb_model=emb)
     summ = Summarizer()
