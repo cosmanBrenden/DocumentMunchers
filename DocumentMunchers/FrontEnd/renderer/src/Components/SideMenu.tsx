@@ -76,7 +76,7 @@ export default function SideMenu({ open, onClose }: { open: boolean; onClose?: (
             </li>
             <li>
               <a href="#/about" className="side-link" onClick={handleNavClick}>
-                About this software
+                About this Software
               </a>
             </li>
           </ul>
