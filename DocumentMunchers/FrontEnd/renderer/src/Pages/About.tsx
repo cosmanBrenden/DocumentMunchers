@@ -4,11 +4,11 @@ import '../css/pages/About.css'
 export default function About() {
   return (
     <div className="about-container">
-      <h1 className="about-title">About our software</h1>
+      <h1 className="about-title">About our Software</h1>
 
       <div className="about-body">
         <p>
-          Hello! We're a small, non-profit team dedicated to building simple,
+          Hello! We're a small team dedicated to building simple,
            secure software you can trust. Our program changes how you find
             files by using a smart AI to search. Instead of just matching 
             keywords, it understands what your files are actually about—think
@@ -22,7 +22,7 @@ export default function About() {
         </p>
 
         <p>
-          Nothing ever leaves your computer or gets sent to us or anyone else. Your information is 100% private and secure.
+          Nothing ever leaves your computer or gets sent to us or anyone else. Your information is private and secure.
         </p>
       </div>
     </div>
