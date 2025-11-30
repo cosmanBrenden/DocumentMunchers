@@ -322,7 +322,8 @@ class Database:
     """
     def get_search_results(self, query:str, num_results=20):
         if self.current_ws_id == None:
-            raise Exception("No workspace selected!")
+            # raise Exception("No workspace selected!")
+            return []
         
         self.__notify_subscribers(f"Making search '{query}'")
 

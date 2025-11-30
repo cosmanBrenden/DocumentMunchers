@@ -38,7 +38,7 @@ function createWindow () {
 
   if (isDev) {
     win.loadURL('http://localhost:5173')
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
   } else {
     // Load renderer/index.html
     win.loadFile(path.join(__dirname, '..', 'dist', 'renderer', 'index.html'))

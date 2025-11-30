@@ -47,6 +47,7 @@ export default function SearchResults({ query, results: externalResults, onResul
         const storedQuery = parsed.query || ''
 
         if(storedQuery == currentQuery){
+          console.log("Parsed Results: ", parsed.results)
           setResultsState(parsed.results || [])
           sessionStorage.removeItem('latestSearchResults')
           return
@@ -81,55 +82,85 @@ export default function SearchResults({ query, results: externalResults, onResul
       }
     }
 
-  // Show the fetched/external results unless the resultsState is null, in which case show mockResults
-  const results = externalResults && externalResults.length > 0
-   ? externalResults : resultsState === null ? mockResults(query || '') 
-   : resultsState || []
+    
+   // Get the final results to display
+  const getDisplayResults = () => {
+    console.log("External Results: ", externalResults)
 
-  const [view, setView] = useState<'list' | 'grid'>('list')
+    console.log("Results State: ", resultsState)
+    if (externalResults !== undefined) {
+      return externalResults
+    }
+    return resultsState || [];
+  }
+ 
+  const results = getDisplayResults();
 
-  return (
+  const [view, setView] = useState<'list' | 'grid'>('list');
+
+ const hasSearchBeenAttempted = resultsState !== null || 
+  (externalResults !== undefined)
+
+  const hasNoResults = hasSearchBeenAttempted && (results.length === 0 || results[0].id == null);
+  console.log("Has no results?", hasNoResults);
+  console.log("Results: ", results);
+  console.log("Results[0]: ", results[0]);
+
+    return (
     <div className="results-root">
-  <SearchBox initialValue={query || ''}
-    onSearch={handleSearchResults}
-  />
-      <div className="results-header">
-        <div className="results-query">Search results{query ? ` for "${query}"` : ''}</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div className="results-count">{results.length} results</div>
-          <IconButton title={view === 'list' ? 'Switch to grid view' : 'Switch to list view'} onClick={() => setView((v) => (v === 'list' ? 'grid' : 'list'))}>
-            {view === 'list' ? (
-              // grid icon
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
-                <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
-                <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
-                <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
-              </svg>
-            ) : (
-              // list icon
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="5" width="16" height="2" rx="1" fill="#2E7D32" />
-                <rect x="4" y="11" width="16" height="2" rx="1" fill="#2E7D32" />
-                <rect x="4" y="17" width="16" height="2" rx="1" fill="#2E7D32" />
-              </svg>
-            )}
-          </IconButton>
-        </div>
-      </div>
-
-      {view === 'list' ? (
-        <div className="results-list">
-          {results.map((r) => (
-            <ListResultCard key={r.id} title={r.title} summary={r.summary} relevance={r.relevance} lastOpened={r.lastOpened} onClick={() => handleResultClick(r)} />
-          ))}
+    <SearchBox initialValue={query || ''}
+      onSearch={handleSearchResults}
+    />
+      
+      {hasNoResults ? (
+        // Error page when no results
+        <div className="error-page">
+          <h2>No search results found</h2>
+          <p>Your search for "{query || ''}" did not return any results.</p>
+          <p>Make sure you have a workspace selected and that there are files in the workspace.</p>
         </div>
       ) : (
-        <div className="results-grid">
-          {results.map((r) => (
-            <GridResultCard key={r.id} title={r.title} summary={r.summary} relevance={r.relevance} lastOpened={r.lastOpened} keywords={r.keywords} onClick={() => handleResultClick(r)} />
-          ))}
-        </div>
+        // Display results when available
+        <>
+          <div className="results-header">
+            <div className="results-query">Search results{query ? ` for "${query}"` : ''}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div className="results-count">{results.length} results</div>
+              <IconButton title={view === 'list' ? 'Switch to grid view' : 'Switch to list view'} onClick={() => setView((v) => (v === 'list' ? 'grid' : 'list'))}>
+                {view === 'list' ? (
+                  // grid icon
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#2E7D32" strokeWidth="1.6" />
+                  </svg>
+                ) : (
+                  // list icon
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="5" width="16" height="2" rx="1" fill="#2E7D32" />
+                    <rect x="4" y="11" width="16" height="2" rx="1" fill="#2E7D32" />
+                    <rect x="4" y="17" width="16" height="2" rx="1" fill="#2E7D32" />
+                  </svg>
+                )}
+              </IconButton>
+            </div>
+          </div>
+
+          {view === 'list' ? (
+            <div className="results-list">
+              {results.map((r) => (
+                <ListResultCard key={r.id} title={r.title} summary={r.summary} relevance={r.relevance} lastOpened={r.lastOpened} onClick={() => handleResultClick(r)} />
+              ))}
+            </div>
+          ) : (
+            <div className="results-grid">
+              {results.map((r) => (
+                <GridResultCard key={r.id} title={r.title} summary={r.summary} relevance={r.relevance} lastOpened={r.lastOpened} keywords={r.keywords} onClick={() => handleResultClick(r)} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -168,6 +199,3 @@ const sendClickToBackend = async (result: Result) => {
     console.error('Error sending click to backend:', error);
   }
 };
-
-
-
