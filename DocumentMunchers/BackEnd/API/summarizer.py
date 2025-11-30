@@ -18,7 +18,7 @@ class Summarizer:
         nltk.download('punkt')
         nltk.download('stopwords')
 
-    def summarize(self, text, num_sentences=3):
+    def summarize(self, text, num_sentences=3, max_chars=200):
         # Step 1: Sentence Tokenization
         sentences = sent_tokenize(text)
         
@@ -45,4 +45,4 @@ class Summarizer:
         
         # Step 5: Generate Summary
         summary = ' '.join(top_sentences)
-        return summary
+        return summary[:max_chars]

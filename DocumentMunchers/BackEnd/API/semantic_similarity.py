@@ -41,17 +41,18 @@ class Similarity:
         max_tfidf = tfidf.get_tfidf_for_word(tfidf.get_keywords()[0])
         if(len(scores) > 0):
             scores = [x/max_tfidf for x in scores]
-            avg_score = sum(scores)/len(scores)
+            kw_score = sum(scores)/len(scores)
         else:
-            avg_score = 0
+            kw_score = 0
 
         # If there is a summary, use the embedding model on the query
         if(file["summary"] != None):
             emb_sim = self.emb_model.embedded_similarity(file["summary"], query)
             # Avg between tfidf and embedded score
-            return (avg_score - emb_sim) / 2
+            avg_score = ((kw_score * 0.8) + (emb_sim * 1.2)) / 2
+            return max(avg_score, kw_score)
         # Just tfidf average
-        return avg_score
+        return kw_score
         
         
 
