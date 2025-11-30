@@ -2,6 +2,7 @@ from database import Database
 from embedding_model import Embedding_Model
 from nlp_tools import POS_Enforcer
 from semantic_similarity import Similarity
+from summarizer import Summarizer
 
 """
 Constructs an instance of a database
@@ -11,5 +12,6 @@ def get_database():
     pos = POS_Enforcer()
     emb = Embedding_Model()
     sim = Similarity(checker=pos, emb_model=emb)
-    db = Database(similarity=sim)
+    summ = Summarizer()
+    db = Database(similarity=sim, summarizer=summ)
     return db

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import '../css/components/WorkspacePopUp.css'
 
 type Workspace = {
@@ -16,9 +17,20 @@ type WorkspaceEditModalProps = {
   onUpdateName: (name: string) => void
   onUpdateDescription: (desc: string) => void
   onRemoveFilePath: (index: number) => void
-  onAddFilePath: () => void
+  onAddFilePath: () => void 
+   /* onAddFilePath: (path: string) => void */
   allowClose?: boolean
 }
+
+/*
+declare global {
+  interface Window {
+    electronAPI: {
+      showDirectoryDialog: () => Promise<string> | null // Now returns just the path string
+    }
+  }
+}
+*/
 
 export default function WorkspaceEditModal({
   workspace,
@@ -32,6 +44,7 @@ export default function WorkspaceEditModal({
   allowClose = true
 }: WorkspaceEditModalProps) {
   const[isSaving, setIsSaving] = useState(false)
+  const [isSelecting, setIsSelecting] = useState(false)
   if (!workspace) return null
 
   const handleBackdropClick = () => {
@@ -65,11 +78,35 @@ export default function WorkspaceEditModal({
     }
   };
 
+  ///*
   const handleAddFilePath = () => {
     if (!isSaving) {
       onAddFilePath();
     }
   };
+  //*/
+
+  /*
+  const handleAddFilesClick = async () => {
+  if (!window.electronAPI) {
+    console.error('Electron API not available')
+    return
+  }
+
+  setIsSelecting(true)
+  try {
+    const directoryPath = await window.electronAPI.showDirectoryDialog()
+    
+    if (directoryPath) {
+      // Just add the directory path directly
+      onAddFilePath(directoryPath)
+    }
+  } catch (error) {
+    console.error('Error selecting directory:', error)
+  } finally {
+    setIsSelecting(false)
+  }
+  } */
 
   const handleUpdateName = (name: string) => {
     if (!isSaving) {
@@ -93,7 +130,7 @@ export default function WorkspaceEditModal({
             <div className="saving-spinner">
               <img src={"/logo-no-text.png"} alt="" />
             </div>
-            <div className="saving-text">Saving changes to workspace...</div>
+            <div className="saving-text">Preprocessing workspace files...</div>
           </div>
         )}
         
@@ -157,8 +194,10 @@ export default function WorkspaceEditModal({
             </div>
 
             <div className="add-path">
+              {/* onClick={handleAddFilesClick} */}
+               {/* */}
               <button 
-                onClick={handleAddFilePath}
+                onClick={handleAddFilePath} 
                 disabled={isSaving}
               >
                 Add Files...
@@ -185,7 +224,6 @@ export default function WorkspaceEditModal({
             {isSaving ? (
               <>
                 <span className="save-spinner"></span>
-                Saving...
               </>
             ) : (
               'Save Changes'

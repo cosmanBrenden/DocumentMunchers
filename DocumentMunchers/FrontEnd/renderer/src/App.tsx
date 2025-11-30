@@ -7,6 +7,7 @@ import About from './Pages/About'
 import Home from './Pages/Home'
 import SearchResults from './Pages/SearchResults'
 import LoadingScreen from './Components/LoadingScreen'
+import WorkspacePopUp from './Components/WorkspacePopUp'
 
 
 //import WorkspacePopUp from './Components/WorkspacePopUp'
@@ -130,8 +131,8 @@ export default function App() {
     <div className="app-root">
       <Header />
       
-      {/* Render WorkspacePopup if showWorkspacePopup is true 
-      {showWorkspacePopup && ( 
+    {/* Render WorkspacePopup if showWorkspacePopup is true */}
+     {/* {showWorkspacePopup && ( 
         <WorkspacePopUp onClose={handleCloseWorkspacePopup} />
       )}
       */}

@@ -11,6 +11,8 @@
 
 /* Make list view content match the centered width used by the grid view */
 .results-list{width:100%;max-width:1200px;margin:0 auto}
+
+/* Fixes alignment issue: */
 /* .results-list .result-card{width:100%} */
 
 /* Grid view: responsive card grid */

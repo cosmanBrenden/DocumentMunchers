@@ -43,11 +43,16 @@ export default function SearchBox({ placeholder, autoFocus, onSearch, initialVal
 
         const results: Result[] = await response.json();
         console.log('Response Data: ', results, '\n')
-        // onSearch(results, val);
         
         // Save into sessionStorage so the results page can pick them up
         try {
+          if(results.length > 0){
             sessionStorage.setItem('latestSearchResults',JSON.stringify(results));
+          }
+          else{
+            sessionStorage.setItem('latestSearchResults', "");
+          }
+            
             console.log('JSON Results: ', JSON.stringify(results), '\n');
         } catch (err) {
           // sessionStorage may be unavailable in some contexts; ignore silently

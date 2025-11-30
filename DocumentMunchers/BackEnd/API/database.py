@@ -136,7 +136,7 @@ class Database:
                 file_content = file_system.read_file_content(fp)
                 # If there should be summarization, summarize the file
                 if(file["ai"] and self.summarizer != None):
-                    
+                    self.__notify_subscribers(f"Summarizing {fp}...")
                     file["summary"] = self.summarizer.summarize(file_content)
                 else:
                     
@@ -322,7 +322,8 @@ class Database:
     """
     def get_search_results(self, query:str, num_results=20):
         if self.current_ws_id == None:
-            raise Exception("No workspace selected!")
+            # raise Exception("No workspace selected!")
+            return []
         
         self.__notify_subscribers(f"Making search '{query}'")
 
@@ -331,14 +332,15 @@ class Database:
         sim_pairs = []
         for file in curr_ws["files"].keys():
             curr_file = curr_ws["files"][file]
-            res = self.similarity.get_similarity(query, curr_file)
-            file_info = {
-                    "summary": curr_file["summary"],
-                    "keywords":curr_file["tfidf"].get_keywords(),
-                    "date_modified": curr_file["date_modified"],
-                    "id": curr_file["id"]
-            }
-            sim_pairs.append([file, file_info, str(res)])
+            if curr_file["tfidf"]:
+                res = self.similarity.get_similarity(query, curr_file)
+                file_info = {
+                        "summary": curr_file["summary"],
+                        "keywords":curr_file["tfidf"].get_keywords(),
+                        "date_modified": curr_file["date_modified"],
+                        "id": curr_file["id"]
+                }
+                sim_pairs.append([file, file_info, str(res)])
 
         sim_pairs = sorted(sim_pairs, key=lambda x: x[2])
         sim_pairs.reverse()
