@@ -1,0 +1,14 @@
+flask
+flask_cors
+transformers
+sentence_transformers
+pdfminer-six
+PyPDF2
+spire
+spire.doc
+numpy
+scipy
+scikit-learn
+lftk
+spacy
+nltk

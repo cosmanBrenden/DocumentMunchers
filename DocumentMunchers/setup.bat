@@ -4,22 +4,23 @@ cd FrontEnd
 npm i
 cd ..
 
-python -m venv venv
-call venv\Scripts\activate.bat
-pip install flask
-pip install flask_cors
-pip install transformers
-pip install sentence_transformers
-pip install pdfminer
-pip install pdfminer.six
-pip install PyPDF2
-pip install spire
-pip install spire.doc
-pip install numpy
-pip install scipy
-pip install scikit-learn
-pip install lftk
-pip install spacy
-pip install nltk
+@REM python -m venv venv
+@REM call venv\Scripts\activate.bat
+@REM pip install flask
+@REM pip install flask_cors
+@REM pip install transformers
+@REM pip install sentence_transformers
+@REM pip install pdfminer
+@REM pip install pdfminer.six
+@REM pip install PyPDF2
+@REM pip install spire
+@REM pip install spire.doc
+@REM pip install numpy
+@REM pip install scipy
+@REM pip install scikit-learn
+@REM pip install lftk
+@REM pip install spacy
+@REM pip install nltk
+pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-call venv\Scripts\deactivate.bat
+@REM call venv\Scripts\deactivate.bat
