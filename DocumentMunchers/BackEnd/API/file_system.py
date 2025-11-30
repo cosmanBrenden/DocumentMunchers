@@ -16,6 +16,8 @@ WORKSPACE_FP = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/wo
 TFIDF_DIR = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/TFIDFS/"
 VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "csv", "ods"])
 
+DELIMS = ["(cid:0)"]
+
 """
 Private function, mines pdf documents
 @param filepath The filepath of the pdf document to mine
@@ -34,8 +36,12 @@ def __convert_pdf(filepath) -> str:
         laparam = LAParams(detect_vertical=True)
         # get content of pdf
         # Parsing over only a few pages seperately may take longer but uses less memory
+        
+        start = 1 if totalPages > 2 else 0
+        stop = totalPages - 2 if totalPages > 3 else totalPages
         step = 3
-        for pg in range(0, totalPages, step):
+        
+        for pg in range(start, stop, step):
             content += extract_text(filepath, page_numbers=list(range(pg, pg+step)), laparams=laparam)
 
         # Check length of content, exclude entries with less than 200 characters
@@ -114,15 +120,24 @@ Reads the file at filepath into a string
 def read_file_content(filepath) -> str:
     # Get file extension
     extension = __get_extension(filepath)
+    content = ""
     # Pdf mine
     if(extension == "pdf"):
-        return __convert_pdf(filepath)
+        content = __convert_pdf(filepath)
     # Word Doc mine
     elif(extension == "docx"):
-        return __convert_docx(filepath)
+        content = __convert_docx(filepath)
     # Just read the contents in
     else:
-        return __convert_generic(filepath)
+        content = __convert_generic(filepath)
+    
+    for delim in DELIMS:
+        content = content.replace(delim, "")
+    
+    # if len(content) > 1000:
+    #     return content[500:]
+
+    return content
 
 """
 Opens the file
