@@ -1,18 +1,23 @@
 # Document Munchers
 > 📢*Latest Update:*
-> 1. Added a semantic search feature.
-> 2. Now, AI provides 4 keywords so that the user can understand the context of the file without opening the file.
-> 3. In the search result page, users are now allowed to change the display format between list form and grid form.
-> 4. Availability for MacOS/Linux/Windows
+> 1. AI summarization for files.
+> 2. Workspaces for compartmentalizing collections of files the program is indexing.
+> 3. Made the UI more responsive.
+> 4. Bug Fixes:
+>> All background processes properly terminate.
+>> The program no longer crashes when attempting to make a search without selecting a workspace, instead bringing the user to an empty search page.
+>> Fixed some CSS formatting issues.
+>> Users can now open the file selection menu multiple times per session.
 
 ## 📝 Description
-Document Munchers is a 100% locally running AI tool that helps you find the exact file that you are looking for on your computer. If you do not remember the title of the file, then describe what the file is about to the AI chatbot. It will search through your files and give you files that are the most relevant to your description. Worried about your privacy? Don't worry! The entire program runs only on your computer, so nothing ever leaves your computer.
+Document Munchers is an AI file search engine that helps you find the exact file that you are looking for on your computer. If you do not remember the title of the file, you can describe what the file is about to the AI search engine, and it will search through your files and give you files that are the most relevant to your query. Worried about your privacy, don't! The entire program runs entirely locally, so nothing ever leaves your computer.
 
 ## 🌟 Provided Features
-1. Added a semantic search feature.
-2. Now, AI provides 4 keywords so that the user can understand the context of the file without opening the file.
-3. In the search result page, users are now allowed to change the display format between list form and grid form.
-4. Availability for MacOS/Linux/Windows
+1. Semantic search based on the text content of files.
+2. Workspaces to compartmentalize what files are indexed by the software.
+3. Summarization of file contents.
+4. Keywords derived from the contents of files.
+5. Cross-platform availability (Windows, MacOS, Linux).
 
 ## 🔎 Getting Started
 
