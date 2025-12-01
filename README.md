@@ -1,13 +1,13 @@
 # Document Munchers
-> 📢*Latest Update:*
-> 1. AI summarization for files.
-> 2. Workspaces for compartmentalizing collections of files the program is indexing.
-> 3. Made the UI more responsive.
-> 4. Bug Fixes:
->> All background processes properly terminate.
->> The program no longer crashes when attempting to make a search without selecting a workspace, instead bringing the user to an empty search page.
->> Fixed some CSS formatting issues.
->> Users can now open the file selection menu multiple times per session.
+## 📢*Latest Update:*
+- AI summarization for files.
+- Workspaces for compartmentalizing collections of files the program is indexing.
+- Made the UI more responsive.
+- Bug Fixes:
+   - All background processes properly terminate.
+   - The program no longer crashes when attempting to make a search without selecting a workspace, instead bringing the user to an empty search page.
+   - Fixed some CSS formatting issues.
+   - Users can now open the file selection menu multiple times per session.
 
 ## 📝 Description
 Document Munchers is an AI file search engine that helps you find the exact file that you are looking for on your computer. If you do not remember the title of the file, you can describe what the file is about to the AI search engine, and it will search through your files and give you files that are the most relevant to your query. Worried about your privacy, don't! The entire program runs entirely locally, so nothing ever leaves your computer.
