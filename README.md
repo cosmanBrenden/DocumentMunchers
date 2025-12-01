@@ -47,5 +47,3 @@ Document Munchers is a 100% locally running AI tool that helps you find the exac
 * A window will open displaying the program's home page
 
 
-
-> ❗*Note:* The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholder results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
