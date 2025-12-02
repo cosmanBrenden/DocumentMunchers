@@ -21,8 +21,8 @@ const sendKillRequest = () => {
         req.destroy();
     });
     
-    // Set timeout (optional)
-    req.setTimeout(5000); // 5 second timeout
+    // 5 second timeout
+    req.setTimeout(5000); 
 }
 
 function createWindow () {
@@ -38,7 +38,6 @@ function createWindow () {
 
   if (isDev) {
     win.loadURL('http://localhost:5173')
-    // win.webContents.openDevTools()
   } else {
     // Load renderer/index.html
     win.loadFile(path.join(__dirname, '..', 'dist', 'renderer', 'index.html'))

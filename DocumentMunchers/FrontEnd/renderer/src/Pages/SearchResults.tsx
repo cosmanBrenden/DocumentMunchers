@@ -4,7 +4,6 @@ import SearchBox from '../Components/SearchBox'
 import ListResultCard from '../Components/ListResultCard'
 import GridResultCard from '../Components/GridResultCard'
 import IconButton from '../Components/IconButton'
-import { mockResults } from '../data/mockResults'
 
 export type Result = {
   id: string
@@ -20,14 +19,10 @@ export default function SearchResults({ query, results: externalResults, onResul
     onResultsUpdate?: (results: Result[]) => void})
 
   {
-  // Results state: if `externalResults` prop is provided, use it.
-  // Otherwise we'll fetch from an API (placeholder below) and fall back to mocks.
-  console.log('SearchResults function called')
-  console.log('External Results: ', externalResults)
+  // Results state: if `externalResults` prop is provided, use it
   const [resultsState, setResultsState] = useState<Result[] | null>(
     externalResults !== undefined ? externalResults : null
   )
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     // If parent passed results, use them and skip fetching
@@ -36,8 +31,7 @@ export default function SearchResults({ query, results: externalResults, onResul
       return
     }
 
-    // If the search bar previously stored results in sessionStorage, use them.
-    // This is how SearchBox passes fetched results to this page without a global store.
+    // If the search bar previously stored results in sessionStorage, use them
     try {
       const raw = sessionStorage.getItem('latestSearchResults')
       if (raw) {
@@ -54,11 +48,10 @@ export default function SearchResults({ query, results: externalResults, onResul
         }
       }
       } catch (err) {
-        // sessionStorage unavailable or JSON parse error - ignore and continue to fetch
+        // sessionStorage unavailable or JSON parse error
         console.warn('Could not read cached search results', err)
     }
 
-    // If there are not search results the program will display the mock search results
     setResultsState(null)
   }, [externalResults, query])
 
@@ -85,26 +78,16 @@ export default function SearchResults({ query, results: externalResults, onResul
     
    // Get the final results to display
   const getDisplayResults = () => {
-    console.log("External Results: ", externalResults)
-
-    console.log("Results State: ", resultsState)
     if (externalResults !== undefined) {
       return externalResults
     }
     return resultsState || [];
   }
  
-  const results = getDisplayResults();
-
-  const [view, setView] = useState<'list' | 'grid'>('list');
-
- const hasSearchBeenAttempted = resultsState !== null || 
-  (externalResults !== undefined)
-
-  const hasNoResults = hasSearchBeenAttempted && (results.length === 0 || results[0].id == null);
-  console.log("Has no results?", hasNoResults);
-  console.log("Results: ", results);
-  console.log("Results[0]: ", results[0]);
+    const [view, setView] = useState<'list' | 'grid'>('list');
+    const results = getDisplayResults();
+    const hasSearchBeenAttempted = resultsState !== null || (externalResults !== undefined);
+    const hasNoResults = hasSearchBeenAttempted && (results.length === 0 || results[0].id == null);
 
     return (
     <div className="results-root">
@@ -113,7 +96,7 @@ export default function SearchResults({ query, results: externalResults, onResul
     />
       
       {hasNoResults ? (
-        // Error page when no results
+        // Error page when no results are available
         <div className="error-page">
           <h2>No search results found</h2>
           <p>Your search for "{query || ''}" did not return any results.</p>
@@ -168,8 +151,7 @@ export default function SearchResults({ query, results: externalResults, onResul
 
 // Handle clicks on list results or grid results 
 const handleResultClick = async (result: Result) => {
-  console.log('Clicked result:', result);
-  // Send click data to Flask backend
+  // Send click data to back end
   await sendClickToBackend(result);
 }
 
@@ -192,10 +174,10 @@ const sendClickToBackend = async (result: Result) => {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error('HTTP error');
     }
     
   } catch (error) {
-    console.error('Error sending click to backend:', error);
+    console.error('Error sending click to back end:', error);
   }
 };

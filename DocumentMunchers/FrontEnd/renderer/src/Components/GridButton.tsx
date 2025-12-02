@@ -98,13 +98,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
     }
   };
 
-  // Use workspaces from back end if available, otherwise use default
-  
-  /* const list = backendWorkspaces.length > 0 ? backendWorkspaces : 
-               (workspaces && workspaces.length > 0) ? workspaces : 
-               [{ id: 'default', name: 'Default workspace', desc: '', current: true }]
-*/
- 
+
   const list = backendWorkspaces;
 
   // Edit an existing workspace
@@ -112,7 +106,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
     setEditWorkspace({...workspace})
     setMenuOpen(null)
     try {
-      // Fetch the workspace details including file paths from the backend
+      // Fetch the workspace details from the back end
       const response = await fetch('http://localhost:5000/api/data', {
         method: 'POST',
         headers: {
@@ -409,7 +403,6 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
         onRemoveFilePath={removeFilePath}
         onAddFilePath={addFilePath}
         allowClose={true}
-        // allowClose={backendWorkspaces.length > 0}
       />
     </>
   )

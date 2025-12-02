@@ -41,6 +41,5 @@ def __format_results(raw_results):
             "lastOpened": datetime.fromtimestamp(item[1]['date_modified'], tz=timezone(timedelta(hours=-4), 'AST')),
             "keywords": item[1]['keywords']
         })
-        print(datetime.fromtimestamp(item[1]['date_modified'], tz=timezone(timedelta(hours=-4), 'AST')))
 
     return formatted_results

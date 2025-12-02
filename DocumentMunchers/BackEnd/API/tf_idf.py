@@ -60,7 +60,7 @@ class TFIDF:
                 upper_percentile_words_tuples.append((word, val))
 
         # Sort keywords in descending order of tfidf, so that the first keyword
-        # is the most relevent, and the second one the second most relevant, and
+        # is the most relevant, and the second one the second most relevant, and
         # so on...
         sorted_tuples = sorted(upper_percentile_words_tuples, key=lambda x : x[1])
         upper_percentile_words = [x[0] for x in sorted_tuples]
@@ -132,7 +132,7 @@ class TFIDF:
     @return The dictionary for writing
     """
     def export(self):
-        # From deepseek, extract all pertinant data
+        # From deepseek, extract all pertinent data
         vectorizer_data = {
             'vectorizer_params': self.vectorizer.get_params(),
             'vocabulary_': self.vectorizer.vocabulary_,

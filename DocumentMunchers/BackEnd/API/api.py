@@ -44,7 +44,6 @@ def handle_data():
             return '', 200
 
         message = request.get_json()
-        print("Got request JSON")
 
         if not message:
             print("Got improperly formatted message")
@@ -53,8 +52,6 @@ def handle_data():
                 "content": "No JSON data provided"
             }), 400
         
-        print("Got a message: ", message)
-        print(type(message))
         
         res = {"type": None, "content": None}
         res_msg = ""
@@ -82,7 +79,6 @@ def handle_data():
                 # results to send back to the front end 
                 res, res_msg = search_query.process(content, DATABASE)
 
-
             elif mtype == "settings_query":
                 raise Exception("Not Implemented Yet!")
             else:
@@ -97,8 +93,7 @@ def handle_data():
             if res_msg != "":
                 status_socket_sub.update(res_msg)
                 terminal_sub.update(res_msg)
-            # if(not res):
-              #  res = [res_msg]
+
         
         return jsonify(res)
         
@@ -113,8 +108,6 @@ def handle_data():
 def get_status():
     """Endpoint to get status updates (replaces status_socket)"""
     try:
-        # stat_msg = status_socket_sub.get_oldest_update()
-        # STATUS_QUEUE.put(stat_msg)
         return jsonify({"status": STATUS_QUEUE.get()})
     except:
         return jsonify({"status": "No updates"})
