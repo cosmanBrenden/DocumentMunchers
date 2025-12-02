@@ -4,7 +4,6 @@ from pdfminer.layout import LAParams
 from pdfminer.high_level import extract_text
 import pickle
 import platform
-# from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfReader
 from spire.doc import *
 from spire.doc.common import *
@@ -26,16 +25,14 @@ Private function, mines pdf documents
 def __convert_pdf(filepath) -> str:
     try:
         with open(filepath, 'rb') as file:
-            #pdfFile = PdfFileReader(file)
             pdfFile = PdfReader(file)
-            #totalPages = pdfFile.getNumPages()
             totalPages = len(pdfFile.pages)
         content = ""
 
-        # Set paramters of extraction
+        # Set parameters of extraction
         laparam = LAParams(detect_vertical=True)
         # get content of pdf
-        # Parsing over only a few pages seperately may take longer but uses less memory
+        # Parsing over only a few pages separately may take longer but uses less memory
         
         start = 1 if totalPages > 2 else 0
         stop = totalPages - 2 if totalPages > 3 else totalPages
@@ -135,9 +132,6 @@ def read_file_content(filepath) -> str:
     
     for delim in DELIMS:
         content = content.replace(delim, "")
-    
-    # if len(content) > 1000:
-    #     return content[500:]
 
     return content
 
@@ -249,5 +243,4 @@ def ask_user_for_directory():
     files = []
     directory = filedialog.askdirectory()
     __directory_dfs(directory, files)
-    print("Selected Files: ", files)
     return files

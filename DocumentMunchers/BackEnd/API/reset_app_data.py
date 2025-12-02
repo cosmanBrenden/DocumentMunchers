@@ -2,15 +2,11 @@ import os
 from pathlib import Path
 
 '''
-Use to reset all pre-processed data (for testing purposes)
+Used to reset all pre-processed data (for testing purposes)
 '''
 check = input("Are you sure you want to delete all pre-processed data? y/n  ")
 if check.lower() == 'y':
     api_path = os.path.dirname(os.path.abspath(__file__))
-
-    # Clear path in test_dir.txt
-    #with open(api_path + '/workspace_files/test_dir.txt', "w", encoding="utf-8") as f:
-        #f.writelines([])
 
     # Delete all files in TFIDFS
     tfidfs_path = api_path + '/workspace_files/TFIDFS/'

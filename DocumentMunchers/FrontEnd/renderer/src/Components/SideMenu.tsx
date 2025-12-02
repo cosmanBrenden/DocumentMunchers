@@ -15,7 +15,7 @@ export default function SideMenu({ open, onClose }: { open: boolean; onClose?: (
     return () => document.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
-  // Close when clicking outside the panel (robust) — any click not inside the panel
+  // Close when clicking outside the panel
   function handleClick(e: React.MouseEvent) {
     if (!onClose) return
     const target = e.target as Node

@@ -35,7 +35,6 @@ export default function WorkspaceEditModal({
   allowClose = true
 }: WorkspaceEditModalProps) {
   const[isSaving, setIsSaving] = useState(false)
-  const [isSelecting, setIsSelecting] = useState(false)
   if (!workspace) return null
 
   const handleBackdropClick = () => {
@@ -69,7 +68,7 @@ export default function WorkspaceEditModal({
     }
   };
 
-  ///*
+
   const handleAddFilePath = () => {
     if (!isSaving) {
       onAddFilePath();
@@ -95,7 +94,7 @@ export default function WorkspaceEditModal({
         {/* Loading Overlay */}
         {isSaving && (
           <div className="saving-overlay">
-            <div className="saving-spinner">
+            <div className="saving-icon">
               <img src={"/logo-no-text.png"} alt="" />
             </div>
             <div className="saving-text">Preprocessing workspace files...</div>

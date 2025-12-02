@@ -38,7 +38,7 @@ export default function SearchBox({ placeholder, autoFocus, onSearch, initialVal
         });
 
         if(!response.ok){
-            throw new Error('SearchBox threw HTTP error, status: ${response.status}');
+            throw new Error('SearchBox threw HTTP error');
         }
 
         const results: Result[] = await response.json();
@@ -79,7 +79,7 @@ export default function SearchBox({ placeholder, autoFocus, onSearch, initialVal
       <form className="search-box" onSubmit={submit} role="search">
         <input
           className="search-input"
-          placeholder={placeholder || 'Type keyword or context of the file that you are looking for!'}
+          placeholder={placeholder || 'Type keyword or content of the file that you are looking for!'}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           aria-label="Search"

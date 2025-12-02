@@ -10,8 +10,6 @@ import LoadingScreen from './Components/LoadingScreen'
 import WorkspacePopUp from './Components/WorkspacePopUp'
 
 
-//import WorkspacePopUp from './Components/WorkspacePopUp'
-
 export default function App() {
   const [route, setRoute] = useState(window.location.hash || '#/')
   const [shouldCheckWorkspaces, setShouldCheckWorkspaces] = useState(true)
@@ -98,7 +96,6 @@ export default function App() {
           if (Array.isArray(result) && result.length === 0) {
             // No workspaces exist, directly show the popup
             setLoadingMessage('No workspaces found. Opening setup...')
-            console.warn("No workspaces set up")
             
             // Small delay to show the message
             setTimeout(() => {
@@ -122,7 +119,7 @@ export default function App() {
     setShowWorkspacePopup(false)
   }
 
-  // Don't render the main app until backend is ready AND workspaces check is complete
+  // Don't render the main app until back end is ready and workspaces check is complete
   if (!isBackendReady || !workspacesChecked) {
     return <LoadingScreen message={loadingMessage} />
   }
@@ -130,13 +127,6 @@ export default function App() {
   return (
     <div className="app-root">
       <Header />
-      
-    {/* Render WorkspacePopup if showWorkspacePopup is true */}
-     {/* {showWorkspacePopup && ( 
-        <WorkspacePopUp onClose={handleCloseWorkspacePopup} />
-      )}
-      */}
-
       <main className="main-area">
         {/* Simple router based on hash */}
         {route === '#/search-history' && <SearchHistory />}

@@ -113,7 +113,7 @@ class Database:
         # Raise an exception if the workspace doesn't exist
         if(not ws_id in self.workspaces.keys()):
             raise Exception(f"Workspace '{ws_id}' does not exist, cannot preprocess it!")
-        # Update subscribers about the preprocessing begining
+        # Update subscribers about the preprocessing beginning
         self.__notify_subscribers(f"Starting preprocessing of '{ws_id}'")
         # Get the workspace out
         curr_ws = self.workspaces[ws_id]
@@ -322,7 +322,6 @@ class Database:
     """
     def get_search_results(self, query:str, num_results=20):
         if self.current_ws_id == None:
-            # raise Exception("No workspace selected!")
             return []
         
         self.__notify_subscribers(f"Making search '{query}'")
