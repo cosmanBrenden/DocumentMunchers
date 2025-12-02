@@ -1,18 +1,23 @@
 # Document Munchers
-> 📢*Latest Update:*
-> 1. Added a semantic search feature.
-> 2. Now, AI provides 4 keywords so that the user can understand the context of the file without opening the file.
-> 3. In the search result page, users are now allowed to change the display format between list form and grid form.
-> 4. Availability for MacOS/Linux/Windows
+## 📢*Latest Update:*
+- AI summarization for files.
+- Workspaces for compartmentalizing collections of files the program is indexing.
+- Made the UI more responsive.
+- Bug Fixes:
+   - All background processes properly terminate.
+   - The program no longer crashes when attempting to make a search without selecting a workspace, instead bringing the user to an empty search page.
+   - Fixed some CSS formatting issues.
+   - Users can now open the file selection menu multiple times per session.
 
 ## 📝 Description
-Document Munchers is a 100% locally running AI tool that helps you find the exact file that you are looking for on your computer. If you do not remember the title of the file, then describe what the file is about to the AI chatbot. It will search through your files and give you files that are the most relevant to your description. Worried about your privacy? Don't worry! The entire program runs only on your computer, so nothing ever leaves your computer.
+Document Munchers is an AI file search engine that helps you find the exact file that you are looking for on your computer. If you do not remember the title of the file, you can describe what the file is about to the AI search engine, and it will search through your files and give you files that are the most relevant to your query. Worried about your privacy, don't! The entire program runs entirely locally, so nothing ever leaves your computer.
 
 ## 🌟 Provided Features
-1. Added a semantic search feature.
-2. Now, AI provides 4 keywords so that the user can understand the context of the file without opening the file.
-3. In the search result page, users are now allowed to change the display format between list form and grid form.
-4. Availability for MacOS/Linux/Windows
+1. Semantic search based on the text content of files.
+2. Workspaces to compartmentalize what files are indexed by the software.
+3. Summarization of file contents.
+4. Keywords derived from the contents of files.
+5. Cross-platform availability (Windows, MacOS, Linux).
 
 ## 🔎 Getting Started
 
@@ -47,5 +52,3 @@ Document Munchers is a 100% locally running AI tool that helps you find the exac
 * A window will open displaying the program's home page
 
 
-
-> ❗*Note:* The first time that the program opens, it will take a while for the initial processing of the test files. Searches will only display placeholder results until these files have finished processing. Once the files have been processed, future sessions of the program will load faster. 
