@@ -158,6 +158,7 @@ def kill():
     sleep(1)
     worker.stop()
     worker.join(timeout=2)
+    DATABASE.close()
     print("You have killed me! WHyYYYy!?")
     os.kill(os.getpid(), signal.SIGINT)
     return jsonify({"success": True, "message": "Server is shutting down..."})
@@ -194,4 +195,4 @@ if __name__ == "__main__":
     print("  GET  /api/status - Get status updates")
     print("  GET  /api/kill - Shutdown program")
 
-    app.run(host='0.0.0.0', port=PORT, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=PORT, debug=True, use_reloader=False, threaded=False)

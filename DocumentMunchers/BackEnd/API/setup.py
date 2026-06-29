@@ -9,9 +9,9 @@ Constructs an instance of a database
 @return The database object to use
 """
 def get_database():
-    pos = POS_Enforcer()
+    # pos = POS_Enforcer()
     emb = Embedding_Model()
-    sim = Similarity(checker=pos, emb_model=emb)
-    summ = Summarizer()
-    db = Database(similarity=sim, summarizer=summ)
+    # sim = Similarity(checker=pos, emb_model=emb)
+    # summ = Summarizer()
+    db = Database(emb_model=emb)
     return db

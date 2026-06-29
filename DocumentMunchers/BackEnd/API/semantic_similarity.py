@@ -10,9 +10,8 @@ class Similarity:
     @param emb_model The embedding model to use on summaries
     @param check The part of speech enforcer for keyword generation from a query
     """
-    def __init__(self, checker: POS_Enforcer, emb_model: Embedding_Model):
+    def __init__(self, emb_model: Embedding_Model):
         self.emb_model = emb_model
-        self.checker = checker
     
     """
     Gets the semantic similarity between the query and a file

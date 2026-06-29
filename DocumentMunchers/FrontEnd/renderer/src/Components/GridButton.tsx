@@ -192,7 +192,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
     if (!editWorkspace) return;
 
     // True if the files should be preprocessed, false otherwise (all true for now)
-    const filePathTuples = filePaths.map(path => [path, true]);
+    const filePathTuples = filePaths.map(path => /*[path, true]*/path);
     // Set loading state
     setIsSavingWorkspace(true); 
 
