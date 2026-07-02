@@ -64,3 +64,52 @@
 .menu-item:hover {
   background: var(--panel);
 }
+
+.saving-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 8px;
+}
+
+
+.saving-icon, .save-spinner {
+  width: 128px;
+  height: 128px;
+  margin-bottom: 60px;
+  animation: spin 1s linear infinite;
+}
+
+.saving-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.saving-text {
+  margin: 0 0 1.5rem 0;
+  color: #004e2f75;
+  font-weight: bolder;
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Animation for saving */
+@keyframes spin {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90%{
+    transform: rotate(10deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(-20deg);
+  }
+}
