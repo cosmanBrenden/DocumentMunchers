@@ -22,8 +22,12 @@ import workspace_query
 
 app = Flask(__name__)
 CORS(app)
-STATUS_QUEUE = Queue()
+# STATUS_QUEUE = Queue()
 PORT = 5000
+STATUS_SOCKET_SUB = BasicSubscriber()
+STAT_SUB_ID = "status_socket"
+TERMINAL_SUB = BasicSubscriber()
+TERM_SUB_ID = "term_sub"
 
 
 # Correct format: {"type":"query_type", "content":{"action":"action_name", "other_content": "value", ...}}
@@ -37,6 +41,7 @@ def __has_valid_formatting(message: dict) -> bool:
 @app.route('/api/data', methods=['POST', 'OPTIONS'])
 @cross_origin() 
 def handle_data():
+    __notify_subscribers("Data Ping")
     try:
         # Get JSON data from request
         # Handle OPTIONS method called automatically at startup 
@@ -64,6 +69,7 @@ def handle_data():
             content = message["content"]
             
             if mtype == "os_query":
+                __notify_subscribers(f"OS Query: {str(content)}")
                 res, res_msg = os_query.process(content)
 
             elif mtype == "stats_query":
@@ -73,9 +79,11 @@ def handle_data():
             elif mtype == "search_history_query":
                 raise Exception("Not Implemented Yet!")
             elif mtype == "workspace_query":
+                __notify_subscribers(f"Workspace Query: {str(content)}")
                 res, res_msg = workspace_query.process(content, DATABASE)
 
             elif mtype == "search_query":
+                __notify_subscribers(f"Search Query: {str(content)}")
                 # results to send back to the front end 
                 res, res_msg = search_query.process(content, DATABASE)
 
@@ -91,8 +99,8 @@ def handle_data():
             res_msg = f"{str(e)} - {tb}"
         finally:
             if res_msg != "":
-                status_socket_sub.update(res_msg)
-                terminal_sub.update(res_msg)
+                STATUS_SOCKET_SUB.update(res_msg)
+                TERMINAL_SUB.update(res_msg)
 
         
         return jsonify(res)
@@ -106,11 +114,17 @@ def handle_data():
 
 @app.route('/api/status', methods=['GET'])
 def get_status():
+    __notify_subscribers("Status Ping")
     """Endpoint to get status updates (replaces status_socket)"""
     try:
-        return jsonify({"status": STATUS_QUEUE.get()})
+        return jsonify({"status": STATUS_SOCKET_SUB.get_oldest_update()})
     except:
-        return jsonify({"status": "No updates"})
+        return jsonify({"status": ""})
+
+# @app.route("/api/busy", methods=["GET"])
+# def get_is_busy():
+#     __notify_subscribers("Busy Ping")
+#     return jsonify({"isbusy": str(DATABASE.get_is_preprocessing())})
 
 # Thank you deepseek
 class StoppableDaemonThread(threading.Thread):
@@ -139,25 +153,26 @@ For handling when the database should dump, and outputting any messages from the
 class ProgramStateThread(StoppableDaemonThread):
     def run(self):
         while not self.stopped():
-            while(terminal_sub.has_update()):
-                print(terminal_sub.get_oldest_update())
+            while(TERMINAL_SUB.has_update()):
+                print(TERMINAL_SUB.get_oldest_update())
             if DATABASE.should_dump():
                 DATABASE.dump_workspaces()
-            try:
-                stat_msg = status_socket_sub.get_oldest_update()
-                STATUS_QUEUE.put(stat_msg)
-            except:
-                sleep(3)
+            # try:
+            #     stat_msg = STATUS_SOCKET_SUB.get_oldest_update()
+            #     STATUS_QUEUE.put(stat_msg)
+            # except:
+            sleep(3)
             
         print("")
 
 
 @app.route('/api/kill', methods=['GET'])
 def kill():
-    
+    __notify_subscribers("Kill Ping")
     sleep(1)
     worker.stop()
     worker.join(timeout=2)
+    DATABASE.close()
     print("You have killed me! WHyYYYy!?")
     os.kill(os.getpid(), signal.SIGINT)
     return jsonify({"success": True, "message": "Server is shutting down..."})
@@ -166,20 +181,25 @@ def kill():
 # Lets the front end check if the back end is ready
 @app.route('/api/health', methods=['GET'])
 def health_check():
+    __notify_subscribers("Health Ping")
+    if(DATABASE.get_is_preprocessing()):
+        return jsonify({"status": "Preprocessing"}), 500
     return jsonify({"status": "ready", "timestamp": datetime.now().isoformat()})
 
+
+def __notify_subscribers(message:str):
+        STATUS_SOCKET_SUB.update(message)
+        TERMINAL_SUB.update(message)
 
 if __name__ == "__main__":
 
     # Initialize database and subscribers
     DATABASE:Database = get_database()
     print("Initialized database...")
-    status_socket_sub = BasicSubscriber()
-    stat_sub_id = "status_socket"
-    terminal_sub = BasicSubscriber()
-    term_sub_id = "term_sub"
-    DATABASE.add_subscriber(status_socket_sub, stat_sub_id)
-    DATABASE.add_subscriber(terminal_sub, term_sub_id)
+    
+    DATABASE.add_subscriber(STATUS_SOCKET_SUB, STAT_SUB_ID)
+    DATABASE.add_subscriber(TERMINAL_SUB, TERM_SUB_ID)
+    DATABASE.purge_backlog_sub()
 
     
     print("Starting API main")
@@ -194,4 +214,4 @@ if __name__ == "__main__":
     print("  GET  /api/status - Get status updates")
     print("  GET  /api/kill - Shutdown program")
 
-    app.run(host='0.0.0.0', port=PORT, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=PORT, debug=True, use_reloader=False, threaded=False)

@@ -121,12 +121,12 @@ def __add_workspace(content:dict, database:Database):
         ws_id = database.generate_ws_id(name)
     description = content["data"]["description"]
     filepaths = content["data"]["filepaths"]
-    filepaths = [tuple(x) for x in filepaths]
+    # filepaths = [tuple(x) for x in filepaths]
 
     # Will throw an exception if something doesnt jive
     database.add_workspace(ws_id, filepaths, name, description)
-    database.dump_workspaces()
-    database.select_workspace(ws_id)
+    # database.dump_workspaces()
+    # database.select_workspace(ws_id)
     
 
 """
@@ -176,7 +176,6 @@ Example input from the FrontEnd
 def __select_workspace(content:dict, database:Database):
     if "id" not in content.keys():
         raise Exception("No id provided!")
-    
     # Will throw an exception if something doesnt jive
     database.select_workspace(content["id"])
 

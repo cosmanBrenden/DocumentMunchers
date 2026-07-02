@@ -49,12 +49,17 @@ class BasicSubscriber:
         self.update_queue = Queue()
     def update(self, update_message:str):
         self.update_queue.append(update_message, time.time())
-    def get_oldest_update(self):
+    def get_oldest_update(self, with_timestamp=True):
         if self.update_queue.is_empty():
             raise Exception("No Messages!")
         
         msg, t = self.update_queue.pop()
-        return f"{datetime.fromtimestamp(round(t))} - {msg}"
+        if(with_timestamp):
+            return f"{datetime.fromtimestamp(round(t))} - {msg}"
+        else:
+            return msg
     def has_update(self):
         return not self.update_queue.is_empty()
+
+    
     

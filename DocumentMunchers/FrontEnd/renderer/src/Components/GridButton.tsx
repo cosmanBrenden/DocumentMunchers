@@ -21,6 +21,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(null);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const [isSavingWorkspace, setIsSavingWorkspace] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch workspaces on initial load to check if popup should be shown
   useEffect(() => {
@@ -192,7 +193,7 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
     if (!editWorkspace) return;
 
     // True if the files should be preprocessed, false otherwise (all true for now)
-    const filePathTuples = filePaths.map(path => [path, true]);
+    const filePathTuples = filePaths.map(path => /*[path, true]*/path);
     // Set loading state
     setIsSavingWorkspace(true); 
 
@@ -281,7 +282,9 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
       });
 
       if (response.ok) {
+        setIsLoading(true)
         const result = await response.json();
+        setIsLoading(false)
         console.log("Workspace activated: ", result);
 
         if(workspace.id){
@@ -345,10 +348,19 @@ export default function GridButton({ workspaces, onSelect }: { workspaces?: Work
 
       {/* Workspace Selection Window */}
       {open && (
+        
         <div className="modal-backdrop" onClick={() => setOpen(false)}>
+          
           <div className="workspace-modal" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
             <div className="workspace-header">Workspaces</div>
-
+            {isLoading && (
+            <div className="saving-overlay">
+              <div className="saving-icon">
+                <img src={"/logo-no-text.png"} alt="" />
+              </div>
+              <div className="saving-text">Preprocessing workspace files...</div>
+            </div>
+          )}
             <div className="workspace-list">
               {list.map((w, idx) => (
                 <div key={w.id || idx} className={`workspace-item ${w.current ? 'current' : ''}`} onClick={() => handleWorkspaceSelect(w)}>
