@@ -25,6 +25,9 @@ VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "cs
 METADATA_FNAME = "metadata.json"
 DB_FNAME = "database.db"
 
+if(not os.path.exists(WORKSPACE_FOLDER)):
+    os.mkdir(WORKSPACE_FOLDER)
+
 DELIMS = ["(cid:0)"]
 
 """
