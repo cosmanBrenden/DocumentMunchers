@@ -18,16 +18,35 @@ from summarizer import Summarizer
 import tkinter as tk
 from tkinter import filedialog
 
-WORKSPACE_FP = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/metadata.json"
-WORKSPACE_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/"
-VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "csv", "ods"])
+# Get platform and user
+PLATFORM = platform.system()
+UNAME = os.getlogin()
 
+# Construct root dir for save data
+if PLATFORM == "Linux":
+    MAIN_FOLDER = f"/home/{UNAME}/.local/share/DocumentMunchers"
+elif PLATFORM == "Darwin":
+    MAIN_FOLDER = f"/Users/{UNAME}/Library/Application/DocumentMunchers"
+elif PLATFORM == "Windows":
+    MAIN_FOLDER = f"C:\\Users\\f{UNAME}\\AppData\\Roaming\\DocumentMunchers"
+
+# Generate path for the workspace save files
+WORKSPACE_FOLDER = os.path.join(MAIN_FOLDER, "workspace_files")
+# Make the root if it doesnt exist
+if(not os.path.exists(MAIN_FOLDER)):
+    os.makedirs(MAIN_FOLDER, exist_ok=True)
+# Make the workspace save folder if it doesnt exist
+if(not os.path.exists(WORKSPACE_FOLDER)):
+    os.makedirs(WORKSPACE_FOLDER, exist_ok=True)
+
+# Hardcoded file names
 METADATA_FNAME = "metadata.json"
 DB_FNAME = "database.db"
+WORKSPACE_FP = os.path.join(WORKSPACE_FOLDER, METADATA_FNAME)
+# Implemented file types
+VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "csv", "ods"])
 
-if(not os.path.exists(WORKSPACE_FOLDER)):
-    os.mkdir(WORKSPACE_FOLDER)
-
+# Substrings to purge from ingested text
 DELIMS = ["(cid:0)"]
 
 """
@@ -50,35 +69,6 @@ def __convert_pdf(filepath) -> str:
     except Exception as e:
         print(e)
         print(f"Could not mine {filepath}")
-# def __convert_pdf(filepath) -> str:
-#     try:
-#         with open(filepath, 'rb') as file:
-#             pdfFile = PdfReader(file)
-#             totalPages = len(pdfFile.pages)
-#         content = ""
-
-#         # Set parameters of extraction
-#         laparam = LAParams(detect_vertical=True)
-#         # get content of pdf
-#         # Parsing over only a few pages separately may take longer but uses less memory
-        
-#         start = 1 if totalPages > 2 else 0
-#         stop = totalPages - 2 if totalPages > 3 else totalPages
-#         step = 3
-        
-#         for pg in range(start, stop, step):
-#             content += extract_text(filepath, page_numbers=list(range(pg, pg+step)), laparams=laparam)
-
-#         # Check length of content, exclude entries with less than 200 characters
-#         if len(content) < 200:
-#             raise Exception
-#         else:
-#         ## Output to file:
-#             return content
-#     except Exception as e:
-#         print(e)
-#         print(f"Could not mine '{filepath}'")
-
 
 
 """
@@ -174,9 +164,9 @@ def open_with_default_viewer(filepath):
     if not os.path.exists(filepath):
         raise Exception(f"'{filepath}' not found!")
     # https://stackoverflow.com/questions/434597/open-document-with-default-os-application-in-python-both-in-windows-and-mac-os
-    if platform.system() == 'Darwin':       # macOS
+    if PLATFORM == 'Darwin':       # macOS
         subprocess.call(('open', filepath))
-    elif platform.system() == 'Windows':    # Windows
+    elif PLATFORM == 'Windows':    # Windows
         os.startfile(filepath)
     else:                                   # linux variants
         subprocess.call(('xdg-open', filepath))
@@ -226,17 +216,6 @@ Loads the workspaces into a dictionary
 """
 def load_workspace_metadata():
     last_selected = ""
-    # # If the workspaces file doesn't exist, create it
-    # if(not os.path.exists(WORKSPACE_FP)):
-    #     wss = dict()
-    #     # Ensure fp exists
-    #     with open(WORKSPACE_FP, "w", encoding="utf-8") as f:
-    #         json.dump([wss, last_selected], f, indent=4)
-    # # If the file does exist, load it
-    # else:
-    #     with open(WORKSPACE_FP, "r", encoding="utf-8") as f:
-    #         wss, last_selected = json.load(f)
-    # # Return the loaded contents
     if(not os.path.exists(os.path.join(WORKSPACE_FOLDER, METADATA_FNAME))):
         wss = dict()
         with open(WORKSPACE_FP, "w", encoding="utf-8") as f:
@@ -270,28 +249,6 @@ def dump_workspace_metadata(wss, last_selected):
     with open(WORKSPACE_FP, "w", encoding="utf-8") as f:
         json.dump([wss, last_selected], f, indent=4)
     
-
-
-# """
-# Takes a tfidf table and dumps it to a binary
-# @param output_fp The filepath to write the binary to
-# @param obj The tfidf table to dump
-# """
-# def pickle_tfidf(output_fp, obj):
-#     if(not os.path.exists(TFIDF_DIR)):
-#         os.mkdir(TFIDF_DIR)
-#     with open(f"{TFIDF_DIR}{output_fp}", "wb") as f:
-#         pickle.dump(obj, f)
-
-# """
-# Loads a tfidf table binary from the passed filepath
-# @param output_fp The filepath the tfidf table was written to
-# @return The loaded contents of the binary
-# """
-# def unpickle_tfidf(output_fp):
-#     with open(f"{TFIDF_DIR}{output_fp}", "rb") as f:
-#         obj = pickle.load(f)
-#     return obj
 
 """
 Opens a file browser where the user can enter in a directory
