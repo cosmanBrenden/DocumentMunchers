@@ -2,15 +2,13 @@ from datetime import datetime
 import time
 import sqlite3
 import file_system
-from semantic_similarity import Similarity
 from subscribers import BasicSubscriber
-from summarizer import Summarizer
-from tf_idf import TFIDF
 import bm25s
 import Stemmer
 from embedding_model import Embedding_Model
 
 DUMP_DELTA = 300
+BACKLOG_SUB_ID = "backlog"
 
 class Database:
     """
@@ -69,10 +67,13 @@ class Database:
         self.con = sqlite3.connect(database_fp)
         self.cur = self.con.cursor()
         self.current_ws_id = ""
+        self.is_preproc = False
+
+        self.add_subscriber(BasicSubscriber(), BACKLOG_SUB_ID)
 
         # Shouldn't throw an exception
         if(last_selected != "" and (not last_selected is None)):
-            print(last_selected)
+            self.__notify_subscribers(f"The last workspace used was {last_selected}")
             self.select_workspace(last_selected)
 
     # """
@@ -91,6 +92,9 @@ class Database:
     #                 tfidf = TFIDF(vectorizer_data=tfidf_dat)
     #                 curr_file["tfidf"] = tfidf
     
+    def get_is_preprocessing(self):
+        return self.is_preproc
+
     """
     Close the connection to the database
     """
@@ -141,6 +145,7 @@ class Database:
     @param ws_id The id of the workspace to index
     """
     def preprocess(self, ws_id, files=None):
+        self.is_preproc = True
         print(f"Files is {files}")
         # # Raise an exception if the workspace doesn't exist
         # if(not ws_id in self.workspace_metadata.keys()):
@@ -182,6 +187,7 @@ class Database:
         if(not ws_id in self.workspace_metadata.keys()):
             raise Exception(f"Workspace '{ws_id}' does not exist, cannot preprocess it!")
         
+        should_preproc = True
 
         # If no files were passed to the method, query the database for a list
         if(files is None):
@@ -191,12 +197,34 @@ class Database:
                 """, (ws_id,))
                 files_raw = self.cur.fetchall()
                 files_raw = [x[0] for x in files_raw]
+                should_preproc = False
+                for f in files_raw:
+                    self.cur.execute("""
+                        select date_modified from files where filepath = ?;
+                    """, (f,))
+                    rec_date = self.cur.fetchone()
+                    rec_date = int(rec_date[0])
+                    act_date = int(file_system.get_date(f))
+                    if(act_date > rec_date or act_date == -1):
+                        print(f"Found old file {f}")
+                        should_preproc = True
+
             except:
+                should_preproc = True
                 files_raw = []
         # If files were passed, make a shallow copy of the list
         else:
             files_raw = files.copy()
         files = []
+
+
+        if(not should_preproc and len(files_raw) != 0):
+            self.is_preproc = False
+            self.curr_bm25_obj = file_system.get_bm25s(ws_id)
+            return
+        
+            
+
         # Delete all indices from the workspace
         self.cur.execute("""
             delete from index_file where ws_id = ?;
@@ -255,6 +283,7 @@ class Database:
 
         self.con.commit()
 
+        self.is_preproc = False
         
         
 
@@ -543,7 +572,6 @@ class Database:
         div = scores[0,0]
         if(scores[0,0] == 0):
             div = 1
-        print(scores)
         calced_scores = []
         for i in range(results.shape[1]):
             doc, bm_score = results[0, i], scores[0, i]/div
@@ -559,7 +587,6 @@ class Database:
 
         for i in range(min(len(calced_scores), num_results)):
             curr_indx, score = calced_scores[i]
-            print(f"Type of score is {type(score)}")
             filepath, summary, date_modified, keywords = rows[curr_indx]
             file_info = {
                 "summary": summary,
@@ -597,6 +624,15 @@ class Database:
     """
     def add_subscriber(self, subscriber:BasicSubscriber, s_id:str):
         self.subscribers.update({s_id:subscriber})
+        if(BACKLOG_SUB_ID in self.subscribers.keys()):
+            backlog:BasicSubscriber = self.subscribers[BACKLOG_SUB_ID]
+            temp = []
+            while(backlog.has_update()):
+                temp.append(backlog.get_oldest_update(with_timestamp=False))
+            for t in temp:
+                subscriber.update(t)
+                backlog.update(t)
+            
         self.__notify_subscribers(f"Added subscriber '{s_id}'")
     """
     Remove a subscriber
@@ -607,6 +643,9 @@ class Database:
             self.subscribers.pop(s_id)
             self.__notify_subscribers(f"Removed subscriber '{s_id}'")
     
+    def purge_backlog_sub(self):
+        self.remove_subscriber(BACKLOG_SUB_ID)
+
     """
     Private method, updates all subscribers
     @param message The message to pass along

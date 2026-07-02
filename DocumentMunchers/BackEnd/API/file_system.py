@@ -9,6 +9,7 @@ import pickle
 import platform
 import pypdfium2 as pdfium
 from PyPDF2 import PdfReader
+import shutil
 from spire.doc import *
 from spire.doc.common import *
 import sqlite3
@@ -19,7 +20,6 @@ from tkinter import filedialog
 
 WORKSPACE_FP = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/metadata.json"
 WORKSPACE_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/"
-TFIDF_DIR = os.path.dirname(os.path.abspath(__file__)) + "/workspace_files/TFIDFS/"
 VALID_FILE_TYPES = set(["pdf", "docx", "txt", "json", "odt", "pptx", "xlsx", "csv", "ods"])
 
 METADATA_FNAME = "metadata.json"
@@ -34,7 +34,6 @@ Private function, mines pdf documents
 """
 def __convert_pdf(filepath) -> str:
     try:
-        print("before")
         doc = pdfium.PdfDocument(filepath)
         text_parts = []
         for page in doc:
@@ -43,7 +42,6 @@ def __convert_pdf(filepath) -> str:
             text_parts.append(text)
 
         text = "\n".join(text_parts)
-        print(f"The text: {text}")
         doc.close()
         return text
     except Exception as e:
@@ -204,7 +202,7 @@ Gets the time last modified of a file at 'filepath'
 """
 def get_date(filepath) -> float:
     if(not os.path.exists(filepath)):
-        raise Exception(f"'{filepath}' does not exist!")
+        return float(-1)
     return os.path.getmtime(filepath)
 
 """
@@ -260,7 +258,7 @@ def get_bm25s(ws_id):
 def save_bm25s(ws_id, bm25_obj:bm25s.BM25):
     bm25_obj.save(os.path.join(WORKSPACE_FOLDER, f"{ws_id}_indices"))
 def delete_bm25s(ws_id):
-    os.removedirs(os.path.join(WORKSPACE_FOLDER, f"{ws_id}_indices"))
+    shutil.rmtree(os.path.join(WORKSPACE_FOLDER, f"{ws_id}_indices"))
 """
 Dumps the workspaces to the workspaces file
 @param wss The dictionary of workspaces to write to a file
@@ -326,7 +324,6 @@ class PathIterator(Sequence):
         large_summary = self._summarizer.summarize(content, max_chars=100000000, num_sentences=20)
         self._keywords.append(self._kw_extractor.get_keywords(large_summary))
         self._summaries.append(large_summary[:200])
-        print(f"Returning {large_summary}")
         return large_summary
         
     

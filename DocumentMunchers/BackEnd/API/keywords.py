@@ -1,7 +1,6 @@
 import spacy
 import pytextrank
 import Stemmer
-from summarizer import Summarizer
 
 class KeywordExtractor:
     def __init__(self):
